@@ -1,33 +1,28 @@
 package com.shoejs.otllo.api.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shoejs.otllo.api.common.AbsBaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.UuidGenerator;
-import org.hibernate.annotations.UuidGenerator.Style;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue
-    @UuidGenerator(style = Style.TIME)
-    private UUID id;
+@EqualsAndHashCode(callSuper = true)
+public class User extends AbsBaseEntity {
 
     @NotBlank
     private String firstName;
@@ -52,4 +47,12 @@ public class User {
     @Size(min = 8)
     @JsonIgnore
     private String password;
+
+    @Column(unique = true)
+    private String profileImagePath;
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "friends", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id"))
+    private Set<User> friends = new HashSet<>();
 }
