@@ -43,5 +43,4 @@ class UserMapperTest {
                 .username("Agook1993").profileImagePath("/some/path/").friends(Collections.emptySet())
                 .visible(true).build();
     }
-
 }

@@ -11,5 +11,4 @@ public interface UserMapper {
 
     @Mapping(target = "profileImage", source = "profileImagePath")
     UserDetailsDto userToUserDetailsDto(User user);
-
 }
