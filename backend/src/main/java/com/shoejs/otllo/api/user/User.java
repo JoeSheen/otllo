@@ -11,7 +11,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -52,7 +51,8 @@ public class User extends AbsBaseEntity {
     private String profileImagePath;
 
     @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "friends", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id"))
-    private Set<User> friends = new HashSet<>();
+    @JoinTable(name = "friends", joinColumns =
+    @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id", referencedColumnName = "id"))
+    private Set<User> friends;
 }
