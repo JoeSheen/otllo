@@ -55,4 +55,6 @@ public class User extends AbsBaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "friend_id", referencedColumnName = "id"))
     private Set<User> friends;
+
+    private boolean visible;
 }
