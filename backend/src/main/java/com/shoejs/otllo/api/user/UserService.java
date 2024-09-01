@@ -19,19 +19,28 @@ public class UserService {
         return mapper.userToUserDetailsDto(user);
     }
 
-    public UserDetailsDto toggleUserVisibility(UUID id, boolean visibility) {
+    public UserDetailsDto toggleUserVisibility(UUID id, Boolean visibility) {
         User user = findUserOrThrow(id);
         user.setVisible(visibility);
         return mapper.userToUserDetailsDto(userRepository.save(user));
     }
 
     public UserDetailsDto addFriend(UUID userId, UUID friendId) {
-        // NOTE - temp version of this method for now. Proper version will be
-        // added after auth work has been done.
+        // TODO:
+        //  NOTE - temp version of this method for now. Proper version will be
+        //  added after auth work has been done.
         User user = findUserOrThrow(userId);
         User friendUser = findUserOrThrow(friendId);
         user.getFriends().add(friendUser);
         return mapper.userToUserDetailsDto(userRepository.save(user));
+    }
+
+    public boolean deleteUserById(UUID id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     private User findUserOrThrow(UUID id) {
