@@ -32,6 +32,7 @@
 		<java.version>17</java.version>
 		<org.projectlombok.version>1.18.34</org.projectlombok.version>
 		<org.mapstruct.version>1.6.0</org.mapstruct.version>
+		<io.jsonwebtoken.version>0.12.6</io.jsonwebtoken.version>
 	</properties>
 
 	<dependencies>
@@ -86,17 +87,17 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
-			<version>0.12.6</version>
+			<version>${io.jsonwebtoken.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
-			<version>0.12.6</version>
+			<version>${io.jsonwebtoken.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
-			<version>0.12.6</version>
+			<version>${io.jsonwebtoken.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 
