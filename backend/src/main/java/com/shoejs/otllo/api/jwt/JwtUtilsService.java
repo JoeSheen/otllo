@@ -1,6 +1,8 @@
 package com.shoejs.otllo.api.jwt;
 
+import com.shoejs.otllo.api.exception.JwtAuthenticationException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -11,6 +13,12 @@ import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 
+import java.time.Instant;
+import java.util.Date;
+import java.util.UUID;
+
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
@@ -35,12 +43,27 @@ public class JwtUtilsService {
     }
 
     public Claims verifyToken(String token) {
-        return Jwts.parser().verifyWith(getSecretSigningKey()).requireIssuer(ISSUER)
-                .requireAudience(AUDIENCE).build().parseSignedClaims(token).getPayload();
+        return parseToken(token).getPayload();
     }
 
-    public String generateToken(String username) {
-        return "";
+    public String generateToken(String username, UUID userId) {
+        Date expirationDate = Date.from(Instant.now().plus(8, HOURS));
+        Date notBeforeDate = Date.from(Instant.now().minus(3, MINUTES));
+        Date issuedAtDate = Date.from(Instant.now());
+
+        return Jwts.builder().header().and().id(UUID.randomUUID().toString()).issuer(ISSUER)
+                .subject(username).audience().add(AUDIENCE).and().expiration(expirationDate)
+                .notBefore(notBeforeDate).issuedAt(issuedAtDate).claim("role", "ROLE_USER")
+                .claim("user_id", userId).signWith(getSecretSigningKey(), Jwts.SIG.HS256).compact();
+    }
+
+    private Jws<Claims> parseToken(String token) {
+        try {
+            return Jwts.parser().verifyWith(getSecretSigningKey()).requireIssuer(ISSUER)
+                    .requireAudience(AUDIENCE).build().parseSignedClaims(token);
+        } catch (Exception ex) {
+            throw new JwtAuthenticationException(ex.getMessage());
+        }
     }
 
     private SecretKey getSecretSigningKey() {

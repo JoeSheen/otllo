@@ -1,5 +1,6 @@
 package com.shoejs.otllo.api.jwt.filter;
 
+import com.shoejs.otllo.api.exception.JwtAuthenticationException;
 import com.shoejs.otllo.api.jwt.JwtUtilsService;
 import com.shoejs.otllo.api.user.User;
 import io.jsonwebtoken.Claims;
@@ -8,6 +9,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,13 +31,15 @@ public class JwtAuthenticationRequestFilter extends OncePerRequestFilter {
 
     //private final HandlerExceptionResolver exceptionResolver;
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationRequestFilter.class);
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = jwtUtilsService.extractTokenFromRequest(request);
-            Claims claims = jwtUtilsService.verifyToken(token);
-            if (!claims.isEmpty()) {
+            if (token != null) {
+                Claims claims = jwtUtilsService.verifyToken(token);
                 String subject = claims.getSubject();
                 if (subject != null && !subject.isBlank()) {
                     User user = (User) userDetailsService.loadUserByUsername(subject);
@@ -44,6 +49,7 @@ public class JwtAuthenticationRequestFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception ex) {
+            throw new JwtAuthenticationException(ex.getMessage());
             // TODO: add exceptionResolver to handle any exceptions thrown during jwt filter
             // exceptionResolver...
         }
@@ -55,8 +61,9 @@ public class JwtAuthenticationRequestFilter extends OncePerRequestFilter {
     }
 
     private void successfulAuthentication(User user, HttpServletRequest request) {
+        logger.info("Authentication Successful");
         UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(user, user, user.getAuthorities());
+                UsernamePasswordAuthenticationToken.authenticated(user, user, user.getAuthorities());
         token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(token);
     }
