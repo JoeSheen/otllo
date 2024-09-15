@@ -30,7 +30,7 @@ public class SecurityFilterConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.csrf(CsrfConfigurer::disable).authorizeHttpRequests(requests -> {
             requests.requestMatchers(antMatcher("/api/v1/auth/**")).permitAll();
-            requests.anyRequest().permitAll();
+            requests.anyRequest().authenticated();
         });
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement(sessions -> sessions.sessionCreationPolicy(STATELESS));

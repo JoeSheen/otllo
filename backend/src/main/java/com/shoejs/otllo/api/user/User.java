@@ -26,6 +26,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "users")
 @EqualsAndHashCode(callSuper = true)
+@ToString
 public class User extends AbsBaseEntity implements UserDetails {
 
     @NotBlank
@@ -41,6 +42,7 @@ public class User extends AbsBaseEntity implements UserDetails {
     private Gender gender;
 
     @Email
+    @Column(unique = true)
     private String email;
 
     private String phoneNumber;
@@ -55,6 +57,7 @@ public class User extends AbsBaseEntity implements UserDetails {
     @Column(unique = true)
     private String profileImagePath;
 
+    @ToString.Exclude
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "friends", joinColumns =
     @JoinColumn(name = "user_id", referencedColumnName = "id"),
