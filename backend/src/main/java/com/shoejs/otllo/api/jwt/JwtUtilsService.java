@@ -47,11 +47,12 @@ public class JwtUtilsService {
     }
 
     public String generateToken(String username, UUID userId) {
-        Date expirationDate = Date.from(Instant.now().plus(8, HOURS));
-        Date notBeforeDate = Date.from(Instant.now().minus(3, MINUTES));
-        Date issuedAtDate = Date.from(Instant.now());
+        Instant instant = Instant.now();
+        Date expirationDate = Date.from(instant.plus(8, HOURS));
+        Date notBeforeDate = Date.from(instant.minus(3, MINUTES));
+        Date issuedAtDate = Date.from(instant);
 
-        return Jwts.builder().header().and().id(UUID.randomUUID().toString()).issuer(ISSUER)
+        return Jwts.builder().header().type("JWT").and().id(UUID.randomUUID().toString()).issuer(ISSUER)
                 .subject(username).audience().add(AUDIENCE).and().expiration(expirationDate)
                 .notBefore(notBeforeDate).issuedAt(issuedAtDate).claim("role", "ROLE_USER")
                 .claim("user_id", userId).signWith(getSecretSigningKey(), Jwts.SIG.HS256).compact();
