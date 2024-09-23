@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = UsernameValidator.class)
 public @interface UsernameValidation {
 
-    String message() default "Invalid username";
+    String message() default "{com.shoejs.otllo.api.annotation.UsernameValidation.message}";
 
     Class<?>[] groups() default {};
 
