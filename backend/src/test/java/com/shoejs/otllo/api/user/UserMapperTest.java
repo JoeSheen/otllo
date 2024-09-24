@@ -14,7 +14,7 @@ class UserMapperTest {
     @Test
     void testUserToUserDetailsDto() {
         // given
-        User user = buildUserForTest();
+        User user = buildUserForTest("Mary", "Wright", "mary.wright93@gmail.com", "070123456789");
 
         // when
         UserDetailsDto userDetails = UserMapper.INST.userToUserDetailsDto(user);
@@ -34,12 +34,33 @@ class UserMapperTest {
         assertThat(userDetails.visible()).isTrue();
     }
 
-    private User buildUserForTest() {
+    @Test
+    void testUpdateUserFromDto() {
+        User user = buildUserForTest("mary", "wright", "mary_wright1993@outlook.co.uk", "079876543210");
+        UserUpdateDto updateDto = new UserUpdateDto("Mary", "Wright", "mary.wright93@gmail.com", "070123456789");
+
+        UserMapper.INST.updateUserFromDto(user, updateDto);
+
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(UUID.fromString("e01cc284-933d-42c7-89eb-70411b394cd2"));
+        assertThat(user.getFirstName()).isEqualTo("Mary");
+        assertThat(user.getLastName()).isEqualTo("Wright");
+        assertThat(user.getDateOfBirth()).isEqualTo(LocalDate.of(1993, Month.AUGUST, 29));
+        assertThat(user.getGender()).isEqualTo(Gender.FEMALE);
+        assertThat(user.getEmail()).isEqualTo("mary.wright93@gmail.com");
+        assertThat(user.getPhoneNumber()).isEqualTo("070123456789");
+        assertThat(user.getUsername()).isEqualTo("Agook1993");
+        assertThat(user.getProfileImagePath()).isEqualTo("/some/path/");
+        assertThat(user.getFriends()).isEmpty();
+        assertThat(user.isVisible()).isTrue();
+    }
+
+    private User buildUserForTest(String firstName, String lastName, String email, String phoneNumber) {
         final UUID id = UUID.fromString("e01cc284-933d-42c7-89eb-70411b394cd2");
         final LocalDate dateOfBirth = LocalDate.of(1993, Month.AUGUST, 29);
 
-        return User.builder().id(id).firstName("Mary").lastName("Wright").dateOfBirth(dateOfBirth)
-                .gender(Gender.FEMALE).email("mary.wright93@gmail.com").phoneNumber("070123456789")
+        return User.builder().id(id).firstName(firstName).lastName(lastName).dateOfBirth(dateOfBirth)
+                .gender(Gender.FEMALE).email(email).phoneNumber(phoneNumber)
                 .username("Agook1993").profileImagePath("/some/path/").friends(Collections.emptySet())
                 .visible(true).build();
     }
