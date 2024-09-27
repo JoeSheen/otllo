@@ -36,11 +36,11 @@ class UserServiceTest {
 
     @Test
     void testGetUserDetailsForProfile() {
-        when(userRepository.findById(id)).thenReturn(Optional.of(buildUserForTest(true, friends)));
+        when(userRepository.findById(id)).thenReturn(Optional.of(buildUserForTest("frank.long@gmail.com", "070123456789", true, friends)));
 
         UserDetailsDto userDetails = userService.getUserDetailsForProfile(id);
 
-        assertUserDetailsDto(userDetails, true, 0);
+        assertUserDetailsDto(userDetails, "frank.long@gmail.com", "070123456789", true, 0);
     }
 
     @Test
@@ -53,12 +53,12 @@ class UserServiceTest {
 
     @Test
     void testToggleUserVisibility() {
-        when(userRepository.findById(id)).thenReturn(Optional.of(buildUserForTest(true, friends)));
-        when(userRepository.save(any(User.class))).thenReturn(buildUserForTest(false, friends));
+        when(userRepository.findById(id)).thenReturn(Optional.of(buildUserForTest("frank.long@gmail.com", "070123456789", true, friends)));
+        when(userRepository.save(any(User.class))).thenReturn(buildUserForTest("frank.long@gmail.com", "070123456789", false, friends));
 
         UserDetailsDto userDetails = userService.toggleUserVisibility(id, false);
 
-        assertUserDetailsDto(userDetails, false, 0);
+        assertUserDetailsDto(userDetails, "frank.long@gmail.com", "070123456789", false, 0);
         verify(userRepository, times(1)).save(any(User.class));
     }
 
@@ -71,9 +71,29 @@ class UserServiceTest {
     }
 
     @Test
+    void testUpdateUserProfile() {
+        when(userRepository.findById(id)).thenReturn(Optional.of(buildUserForTest("frank.long@gmail.com", "070123456789", true, friends)));
+        when(userRepository.save(any(User.class))).thenReturn(buildUserForTest("frank.long85@outlook.co.uk", "079876543210", true, friends));
+
+        UserUpdateDto updateDto = new UserUpdateDto("Frank", "Long", "frank.long85@outlook.co.uk", "079876543210");
+
+        UserDetailsDto userDetails = userService.updateUserProfile(id, updateDto);
+        assertUserDetailsDto(userDetails, "frank.long85@outlook.co.uk", "079876543210", true, 0);
+    }
+
+    @Test
+    void testUpdateUserProfileThrowsException() {
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        UserUpdateDto updateDto = new UserUpdateDto("Frank", "Long", "frank.long@gmail.com", "070123456789");
+        assertThatThrownBy(() -> userService.updateUserProfile(id, updateDto))
+                .isInstanceOf(ResourceNotFoundException.class).hasMessage(String.format("User with ID: [%s] not found", id));
+    }
+
+    @Test
     void testAddFriend() {
         UUID friendId = UUID.fromString("25b3157d-6e88-4243-bca7-3fe238d6fe5e");
-        User user = buildUserForTest(true, friends);
+        User user = buildUserForTest("frank.long@gmail.com", "070123456789", true, friends);
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
         when(userRepository.findById(friendId)).thenReturn(Optional.of(User.builder().id(friendId).build()));
@@ -83,7 +103,7 @@ class UserServiceTest {
 
         UserDetailsDto userDetails = userService.addFriend(id, friendId);
 
-        assertUserDetailsDto(userDetails, true, 1);
+        assertUserDetailsDto(userDetails, "frank.long@gmail.com", "070123456789", true, 1);
         verify(userRepository, times(1)).save(any(User.class));
     }
 
@@ -117,15 +137,15 @@ class UserServiceTest {
 
     }
 
-    private void assertUserDetailsDto(UserDetailsDto userDetailsDto, boolean expectedVisibility, int expectedFriendsCount) {
+    private void assertUserDetailsDto(UserDetailsDto userDetailsDto, String expectedEmail, String expectedPhoneNumber, boolean expectedVisibility, int expectedFriendsCount) {
         assertThat(userDetailsDto).isNotNull();
         assertThat(userDetailsDto.id()).isEqualTo(UUID.fromString("c8da08f0-00d8-4730-87e9-19544a0cd72a"));
         assertThat(userDetailsDto.firstName()).isEqualTo("Frank");
         assertThat(userDetailsDto.lastName()).isEqualTo("Long");
         assertThat(userDetailsDto.dateOfBirth()).isEqualTo(LocalDate.of(1985, Month.JUNE, 28));
         assertThat(userDetailsDto.gender()).isEqualTo("MALE");
-        assertThat(userDetailsDto.email()).isEqualTo("frank.long@gmail.com");
-        assertThat(userDetailsDto.phoneNumber()).isEqualTo("070123456789");
+        assertThat(userDetailsDto.email()).isEqualTo(expectedEmail);
+        assertThat(userDetailsDto.phoneNumber()).isEqualTo(expectedPhoneNumber);
         assertThat(userDetailsDto.username()).isEqualTo("longFrank");
         assertThat(userDetailsDto.profileImage()).isEqualTo("/some/path/");
         assertThat(userDetailsDto.friends().size()).isEqualTo(expectedFriendsCount);
@@ -134,11 +154,11 @@ class UserServiceTest {
         verify(userRepository, times(1)).findById(id);
     }
 
-    private User buildUserForTest(boolean visibility, Set<User> friends) {
+    private User buildUserForTest(String email, String phoneNumber, boolean visibility, Set<User> friends) {
         final LocalDate dateOfBirth = LocalDate.of(1985, Month.JUNE, 28);
 
         return User.builder().id(id).firstName("Frank").lastName("Long").dateOfBirth(dateOfBirth).gender(Gender.MALE)
-                .email("frank.long@gmail.com").phoneNumber("070123456789").username("longFrank")
+                .email(email).phoneNumber(phoneNumber).username("longFrank")
                 .profileImagePath("/some/path/").friends(friends).visible(visibility).build();
     }
 }

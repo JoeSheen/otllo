@@ -19,9 +19,15 @@ public class UserService {
         return mapper.userToUserDetailsDto(user);
     }
 
-    public UserDetailsDto toggleUserVisibility(UUID id, Boolean visibility) {
+    public UserDetailsDto toggleUserVisibility(UUID id, boolean visibility) {
         User user = findUserOrThrow(id);
         user.setVisible(visibility);
+        return mapper.userToUserDetailsDto(userRepository.save(user));
+    }
+
+    public UserDetailsDto updateUserProfile(UUID id, UserUpdateDto updateDto) {
+        User user = findUserOrThrow(id);
+        mapper.updateUserFromDto(user, updateDto);
         return mapper.userToUserDetailsDto(userRepository.save(user));
     }
 

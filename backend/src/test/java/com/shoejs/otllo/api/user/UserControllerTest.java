@@ -66,14 +66,44 @@ class UserControllerTest {
     void testToggleUserVisibility() throws Exception {
         when(userService.toggleUserVisibility(id, false)).thenReturn(buildUserDetailsForTest(false));
 
-        String toggleVisibilityRequest = baseRequest + "togglevisibility/" + id + "/false";
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(toggleVisibilityRequest)
-                .contentType(APPLICATION_JSON_VALUE);
+        String toggleVisibilityRequest = baseRequest + "togglevisibility/" + id;
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch(toggleVisibilityRequest)
+                .param("visibility", "false").contentType(APPLICATION_JSON_VALUE);
 
         MvcResult result = mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isOk()).andReturn();
 
         UserDetailsDto userDetails = mapper.readValue(result.getResponse().getContentAsString(), UserDetailsDto.class);
         assertUserDetailsDto(userDetails, false);
+    }
+
+    @Test
+    void testUpdateUserProfile() throws Exception {
+        UserUpdateDto updateDto = new UserUpdateDto("Charles", "Simmons", "charles.simmons@protonmail.com", "070123456789");
+
+        when(userService.updateUserProfile(id, updateDto)).thenReturn(buildUserDetailsForTest(true));
+
+        String updateUserProfileRequest = baseRequest + "/" + id;
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(updateUserProfileRequest)
+                .content(mapper.writeValueAsString(updateDto)).contentType(APPLICATION_JSON_VALUE);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andDo(print()).andExpect((status().isOk())).andReturn();
+
+        UserDetailsDto userDetails = mapper.readValue(result.getResponse().getContentAsString(), UserDetailsDto.class);
+        assertUserDetailsDto(userDetails, true);
+    }
+
+    @Test
+    void testUpdateUserProfileReturnsBadRequest() throws Exception {
+        UserUpdateDto updateDto = new UserUpdateDto("", "", "", "");
+
+        String updateUserProfileRequest = baseRequest + "/" + id;
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(updateUserProfileRequest)
+                .content(mapper.writeValueAsString(updateDto)).contentType(APPLICATION_JSON_VALUE);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andDo(print()).andExpect((status().isBadRequest())).andReturn();
+
+        assertThat(result.getResponse().getContentAsString()).isBlank();
+        assertThat(result.getResponse().getErrorMessage()).isEqualTo("Invalid request content.");
     }
 
     @Test
