@@ -1,6 +1,7 @@
 package com.shoejs.otllo.api.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shoejs.otllo.api.annotation.UsernameValidation;
 import com.shoejs.otllo.api.common.AbsBaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -48,6 +49,7 @@ public class User extends AbsBaseEntity implements UserDetails {
     private String phoneNumber;
 
     @Column(unique = true)
+    @UsernameValidation
     private String username;
 
     @Size(min = 8)

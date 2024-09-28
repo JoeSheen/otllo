@@ -58,7 +58,7 @@ class AuthenticationControllerTest {
 
         SignupCredentialsDto credentialsDto = new SignupCredentialsDto("Roxanna", "Montez",
                 dateOfBirth, "FEMALE", "roxanna.montez@protonmail.com", "070123456789",
-                "Colith93", "password", "/some/path/", true);
+                "#Colith93", "password", "/some/path/", true);
 
         String signupRequestPath = baseRequest + "/signup";
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(signupRequestPath)
@@ -68,6 +68,22 @@ class AuthenticationControllerTest {
 
         AuthenticationDetailsDto authDetails = mapper.readValue(result.getResponse().getContentAsString(), AuthenticationDetailsDto.class);
         assertAuthenticationDetailsDto(authDetails);
+    }
+
+    @Test
+    void testSignupReturnsBadRequest() throws Exception {
+        SignupCredentialsDto credentialsDto = new SignupCredentialsDto("Roxanna", "Montez",
+                dateOfBirth, "FEMALE", "roxanna.montez@protonmail.com", "070123456789",
+                "Colith93", "password", "/some/path/", true);
+
+        String signupRequestPath = baseRequest + "/signup";
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(signupRequestPath)
+                .content(mapper.writeValueAsString(credentialsDto)).contentType(APPLICATION_JSON_VALUE);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andDo(print()).andExpect((status().isBadRequest())).andReturn();
+
+        assertThat(result.getResponse().getContentAsString()).isBlank();
+        assertThat(result.getResponse().getErrorMessage()).isEqualTo("Invalid request content.");
     }
 
     @Test

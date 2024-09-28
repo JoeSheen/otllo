@@ -1,5 +1,6 @@
 package com.shoejs.otllo.api.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +21,24 @@ public class UserController {
         return userService.getUserDetailsForProfile(id);
     }
 
-    @PutMapping("/togglevisibility/{id}/{visibility}")
+    @PatchMapping("/togglevisibility/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody UserDetailsDto toggleUserVisibility(@PathVariable("id") UUID id, @PathVariable("visibility") Boolean visibility) {
+    public @ResponseBody UserDetailsDto toggleUserVisibility(@PathVariable("id") UUID id, @RequestParam(defaultValue = "true") Boolean visibility) {
         return userService.toggleUserVisibility(id, visibility);
     }
 
-    @PutMapping("/addfriend/{id}/{friendId}")
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody UserDetailsDto updateUserProfile(@PathVariable("id") UUID id, @Valid @RequestBody UserUpdateDto updateDto) {
+        return userService.updateUserProfile(id, updateDto);
+    }
+
+    /*@PutMapping("/addfriend/{id}/{friendId}")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody UserDetailsDto addFriendToUser(UUID id, UUID friendId) {
         // TODO: this will change in future task.
         throw new RuntimeException("method not implemented atm, will be done in future");
-    }
+    }*/
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable("id") UUID id) {
