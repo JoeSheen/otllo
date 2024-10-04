@@ -1,6 +1,7 @@
 package com.shoejs.otllo.api.jwt.filter;
 
-import com.shoejs.otllo.api.exception.JwtAuthenticationException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shoejs.otllo.api.exception.handler.ApiErrorDetailsDto;
 import com.shoejs.otllo.api.jwt.JwtUtilsService;
 import com.shoejs.otllo.api.user.User;
 import io.jsonwebtoken.Claims;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class JwtAuthenticationRequestFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
 
-    //private final HandlerExceptionResolver exceptionResolver;
+    private final ObjectMapper objectMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationRequestFilter.class);
 
@@ -48,12 +50,10 @@ public class JwtAuthenticationRequestFilter extends OncePerRequestFilter {
                     }
                 }
             }
+            filterChain.doFilter(request, response);
         } catch (Exception ex) {
-            throw new JwtAuthenticationException(ex.getMessage());
-            // TODO: add exceptionResolver to handle any exceptions thrown during jwt filter
-            // exceptionResolver...
+            this.handleAuthenticationException(request, response, ex);
         }
-        filterChain.doFilter(request, response);
     }
 
     private boolean isUnauthenticated() {
@@ -66,5 +66,14 @@ public class JwtAuthenticationRequestFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken.authenticated(user, user, user.getAuthorities());
         token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(token);
+    }
+
+    private void handleAuthenticationException(HttpServletRequest request,
+            HttpServletResponse response, Exception ex) throws IOException {
+        ApiErrorDetailsDto apiError = new ApiErrorDetailsDto(LocalDateTime.now(),
+                HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage(), request.getRequestURI());
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write(objectMapper.writeValueAsString(apiError));
     }
 }
