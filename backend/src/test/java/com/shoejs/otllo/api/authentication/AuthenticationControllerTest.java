@@ -58,7 +58,7 @@ class AuthenticationControllerTest {
 
         SignupCredentialsDto credentialsDto = new SignupCredentialsDto("Roxanna", "Montez",
                 dateOfBirth, "FEMALE", "roxanna.montez@protonmail.com", "070123456789",
-                "#Colith93", "password", "/some/path/", true);
+                "#Colith93", "password", "/some/path/", true, "some status");
 
         String signupRequestPath = baseRequest + "/signup";
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(signupRequestPath)
@@ -74,7 +74,7 @@ class AuthenticationControllerTest {
     void testSignupReturnsBadRequest() throws Exception {
         SignupCredentialsDto credentialsDto = new SignupCredentialsDto("Roxanna", "Montez",
                 dateOfBirth, "FEMALE", "roxanna.montez@protonmail.com", "070123456789",
-                "Colith93", "password", "/some/path/", true);
+                "Colith93", "password", "/some/path/", true, "some status");
 
         String signupRequestPath = baseRequest + "/signup";
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(signupRequestPath)
@@ -120,12 +120,13 @@ class AuthenticationControllerTest {
         assertThat(details.profileImage()).isEqualTo("/some/path/");
         assertThat(details.friends()).isEmpty();
         assertThat(details.visible()).isTrue();
+        assertThat(details.status()).isEqualTo("some status");
     }
 
     private AuthenticationDetailsDto buildAuthenticationDetailsForTest() {
         UserDetailsDto userDetails = new UserDetailsDto(id, "Roxanna", "Montez", dateOfBirth,
                 "FEMALE", "roxanna.montez@protonmail.com", "070123456789", "Colith93",
-                "/some/path/", friends, true);
+                "/some/path/", friends, true, "some status");
         return new AuthenticationDetailsDto("test-jwt", userDetails);
     }
 }

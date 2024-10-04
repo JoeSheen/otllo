@@ -24,5 +24,6 @@ public record SignupCredentialsDto(
         @NotBlank
         String password,
         String profileImagePath,
-        boolean visible
+        boolean visible,
+        String status
 ) {}

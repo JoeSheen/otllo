@@ -15,5 +15,6 @@ public record UserDetailsDto(
         String username,
         String profileImage,
         Set<UserDetailsDto> friends,
-        boolean visible
+        boolean visible,
+        String status
 ) {}

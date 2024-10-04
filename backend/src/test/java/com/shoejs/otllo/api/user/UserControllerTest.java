@@ -78,7 +78,8 @@ class UserControllerTest {
 
     @Test
     void testUpdateUserProfile() throws Exception {
-        UserUpdateDto updateDto = new UserUpdateDto("Charles", "Simmons", "charles.simmons@protonmail.com", "070123456789");
+        UserUpdateDto updateDto = new UserUpdateDto("Charles", "Simmons", "charles.simmons@protonmail.com",
+                "070123456789", "some status value");
 
         when(userService.updateUserProfile(id, updateDto)).thenReturn(buildUserDetailsForTest(true));
 
@@ -94,7 +95,7 @@ class UserControllerTest {
 
     @Test
     void testUpdateUserProfileReturnsBadRequest() throws Exception {
-        UserUpdateDto updateDto = new UserUpdateDto("", "", "", "");
+        UserUpdateDto updateDto = new UserUpdateDto("", "", "", "", "");
 
         String updateUserProfileRequest = baseRequest + "/" + id;
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(updateUserProfileRequest)
@@ -147,6 +148,7 @@ class UserControllerTest {
         assertThat(userDetailsDto.profileImage()).isEqualTo("/some/path/");
         assertThat(userDetailsDto.friends()).isEmpty();
         assertThat(userDetailsDto.visible()).isEqualTo(expectedVisibility);
+        assertThat(userDetailsDto.status()).isEqualTo("some status value");
     }
 
     private UserDetailsDto buildUserDetailsForTest(boolean visibility) {
@@ -155,6 +157,6 @@ class UserControllerTest {
 
         return new UserDetailsDto(id, "Charles", "Simmons", dateOfBirth, "MALE",
                 "charles.simmons@protonmail.com", "070123456789", "ProSimmons",
-                "/some/path/", friends, visibility);
+                "/some/path/", friends, visibility, "some status value");
     }
 }
