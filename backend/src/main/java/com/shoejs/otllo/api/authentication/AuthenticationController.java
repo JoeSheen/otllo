@@ -14,13 +14,13 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody AuthenticationDetailsDto signup(@Valid @RequestBody SignupCredentialsDto credentialsDto) {
+    public AuthenticationDetailsDto signup(@Valid @RequestBody SignupCredentialsDto credentialsDto) {
         return authenticationService.signup(credentialsDto);
     }
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody AuthenticationDetailsDto login(@Valid @RequestBody LoginCredentialsDto credentialsDto) {
+    public AuthenticationDetailsDto login(@Valid @RequestBody LoginCredentialsDto credentialsDto) {
         return authenticationService.login(credentialsDto);
     }
 }
