@@ -72,6 +72,8 @@ class AuthenticationServiceTest {
 
     private final boolean visible = true;
 
+    private final String status = "some status value";
+
     @BeforeEach
     void setUp() {
         authenticationService = new AuthenticationService(userRepository, jwtUtilsService, authenticationManager, mapper);
@@ -85,7 +87,7 @@ class AuthenticationServiceTest {
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
 
         SignupCredentialsDto credentialsDto = new SignupCredentialsDto(firstName, lastName, dateOfBirth, gender,
-                email, phoneNumber, username, password, imagePath, visible);
+                email, phoneNumber, username, password, imagePath, visible, status);
 
         AuthenticationDetailsDto authDetailsDto = authenticationService.signup(credentialsDto);
         assertAuthenticationDetailsDto(authDetailsDto);
@@ -96,7 +98,7 @@ class AuthenticationServiceTest {
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
 
         SignupCredentialsDto credentialsDto = new SignupCredentialsDto(firstName, lastName, dateOfBirth, gender,
-                email, phoneNumber, username, password, imagePath, visible);
+                email, phoneNumber, username, password, imagePath, visible, status);
 
         assertThatThrownBy(() -> authenticationService.signup(credentialsDto)).
                 isInstanceOf(DuplicateEntityException.class).hasMessage("Email already registered");
@@ -134,11 +136,13 @@ class AuthenticationServiceTest {
         assertThat(userDetailsDto.profileImage()).isEqualTo("/some/path/");
         assertThat(userDetailsDto.friends()).isEmpty();
         assertThat(userDetailsDto.visible()).isTrue();
+        assertThat(userDetailsDto.status()).isEqualTo("some status value");
     }
 
     private User buildUserForTest() {
         return User.builder().id(id).firstName(firstName).lastName(lastName).dateOfBirth(dateOfBirth)
                 .gender(Gender.MALE).email(email).phoneNumber(phoneNumber).username(username)
-                .profileImagePath(imagePath).friends(Collections.emptySet()).visible(visible).build();
+                .profileImagePath(imagePath).friends(Collections.emptySet()).visible(visible)
+                .status("some status value").build();
     }
 }

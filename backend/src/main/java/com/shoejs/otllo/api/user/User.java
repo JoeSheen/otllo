@@ -68,6 +68,9 @@ public class User extends AbsBaseEntity implements UserDetails {
 
     private boolean visible;
 
+    @Size(max = 500)
+    private String status;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));

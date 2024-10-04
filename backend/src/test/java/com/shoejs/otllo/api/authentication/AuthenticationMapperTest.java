@@ -34,7 +34,8 @@ class AuthenticationMapperTest {
 
         SignupCredentialsDto credentials = new SignupCredentialsDto("Anthony", "McCord",
                 LocalDate.of(1991, Month.MAY, 23), "MALE", "anthony.mccord@hotmail.com",
-                "070123456789", "Antfeen", "password", "/some/path/", true);
+                "070123456789", "Antfeen", "password", "/some/path/",
+                true, "some status");
         User user = mapper.signupCredentialsDtoToUser(credentials);
 
         assertThat(user).isNotNull();
@@ -52,6 +53,7 @@ class AuthenticationMapperTest {
         assertThat(user.getProfileImagePath()).isEqualTo("/some/path/");
         assertThat(user.getFriends()).isNull();
         assertThat(user.isVisible()).isTrue();
+        assertThat(user.getStatus()).isEqualTo("some status");
     }
 
     @Test
@@ -60,7 +62,7 @@ class AuthenticationMapperTest {
         User user = User.builder().id(UUID.fromString("c32a03c7-a51f-40b7-aa4b-6a8e9417e327"))
                 .firstName("Anthony").lastName("McCord").dateOfBirth(LocalDate.of(1991, Month.MAY, 23))
                 .gender(Gender.MALE).email("anthony.mccord@hotmail.com").phoneNumber("070123456789").username("Antfeen")
-                .profileImagePath("/some/path/").friends(Collections.emptySet()).visible(true).build();
+                .profileImagePath("/some/path/").friends(Collections.emptySet()).visible(true).status("some status").build();
 
         AuthenticationDetailsDto authDetails = mapper.userToAuthenticationDetailsDto(jwt, user);
 
@@ -78,5 +80,6 @@ class AuthenticationMapperTest {
         assertThat(userDetails.profileImage()).isEqualTo("/some/path/");
         assertThat(userDetails.friends()).isEmpty();
         assertThat(userDetails.visible()).isTrue();
+        assertThat(userDetails.status()).isEqualTo("some status");
     }
 }

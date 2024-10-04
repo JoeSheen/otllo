@@ -10,5 +10,7 @@ public record UserUpdateDto(
         @NotBlank
         String email,
         @NotBlank
-        String phoneNumber
+        String phoneNumber,
+        @NotBlank
+        String status
 ) {}

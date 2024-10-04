@@ -75,7 +75,8 @@ class UserServiceTest {
         when(userRepository.findById(id)).thenReturn(Optional.of(buildUserForTest("frank.long@gmail.com", "070123456789", true, friends)));
         when(userRepository.save(any(User.class))).thenReturn(buildUserForTest("frank.long85@outlook.co.uk", "079876543210", true, friends));
 
-        UserUpdateDto updateDto = new UserUpdateDto("Frank", "Long", "frank.long85@outlook.co.uk", "079876543210");
+        UserUpdateDto updateDto = new UserUpdateDto("Frank", "Long", "frank.long85@outlook.co.uk",
+                "079876543210", "some status value");
 
         UserDetailsDto userDetails = userService.updateUserProfile(id, updateDto);
         assertUserDetailsDto(userDetails, "frank.long85@outlook.co.uk", "079876543210", true, 0);
@@ -85,7 +86,8 @@ class UserServiceTest {
     void testUpdateUserProfileThrowsException() {
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
-        UserUpdateDto updateDto = new UserUpdateDto("Frank", "Long", "frank.long@gmail.com", "070123456789");
+        UserUpdateDto updateDto = new UserUpdateDto("Frank", "Long", "frank.long@gmail.com",
+                "070123456789", "some status value");
         assertThatThrownBy(() -> userService.updateUserProfile(id, updateDto))
                 .isInstanceOf(ResourceNotFoundException.class).hasMessage(String.format("User with ID: [%s] not found", id));
     }
@@ -150,6 +152,7 @@ class UserServiceTest {
         assertThat(userDetailsDto.profileImage()).isEqualTo("/some/path/");
         assertThat(userDetailsDto.friends().size()).isEqualTo(expectedFriendsCount);
         assertThat(userDetailsDto.visible()).isEqualTo(expectedVisibility);
+        assertThat(userDetailsDto.status()).isEqualTo("some status value");
 
         verify(userRepository, times(1)).findById(id);
     }
@@ -158,7 +161,7 @@ class UserServiceTest {
         final LocalDate dateOfBirth = LocalDate.of(1985, Month.JUNE, 28);
 
         return User.builder().id(id).firstName("Frank").lastName("Long").dateOfBirth(dateOfBirth).gender(Gender.MALE)
-                .email(email).phoneNumber(phoneNumber).username("longFrank")
-                .profileImagePath("/some/path/").friends(friends).visible(visibility).build();
+                .email(email).phoneNumber(phoneNumber).username("longFrank").profileImagePath("/some/path/")
+                .friends(friends).visible(visibility).status("some status value").build();
     }
 }
