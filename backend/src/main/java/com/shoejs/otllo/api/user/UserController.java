@@ -33,13 +33,6 @@ public class UserController {
         return userService.updateUserProfile(id, updateDto);
     }
 
-    /*@PutMapping("/addfriend/{id}/{friendId}")
-    @ResponseStatus(HttpStatus.OK)
-    public UserDetailsDto addFriendToUser(UUID id, UUID friendId) {
-        // TODO: this will change in future task.
-        throw new RuntimeException("method not implemented atm, will be done in future");
-    }*/
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable("id") UUID id) {
         if (userService.deleteUserById(id)) {
