@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -27,7 +26,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "users")
 @EqualsAndHashCode(callSuper = true)
-@ToString
 public class User extends AbsBaseEntity implements UserDetails {
 
     @NotBlank
@@ -58,13 +56,6 @@ public class User extends AbsBaseEntity implements UserDetails {
 
     @Column(unique = true)
     private String profileImagePath;
-
-    @ToString.Exclude
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "friends", joinColumns =
-    @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id", referencedColumnName = "id"))
-    private Set<User> friends;
 
     private boolean visible;
 

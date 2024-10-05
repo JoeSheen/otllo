@@ -31,16 +31,6 @@ public class UserService {
         return mapper.userToUserDetailsDto(userRepository.save(user));
     }
 
-    public UserDetailsDto addFriend(UUID userId, UUID friendId) {
-        // TODO:
-        //  NOTE - temp version of this method for now. Proper version will be
-        //  added after auth work has been done.
-        User user = findUserOrThrow(userId);
-        User friendUser = findUserOrThrow(friendId);
-        user.getFriends().add(friendUser);
-        return mapper.userToUserDetailsDto(userRepository.save(user));
-    }
-
     public boolean deleteUserById(UUID id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);

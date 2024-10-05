@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -134,7 +133,6 @@ class AuthenticationServiceTest {
         assertThat(userDetailsDto.phoneNumber()).isEqualTo("070123456789");
         assertThat(userDetailsDto.username()).isEqualTo("Bobby99");
         assertThat(userDetailsDto.profileImage()).isEqualTo("/some/path/");
-        assertThat(userDetailsDto.friends()).isEmpty();
         assertThat(userDetailsDto.visible()).isTrue();
         assertThat(userDetailsDto.status()).isEqualTo("some status value");
     }
@@ -142,7 +140,7 @@ class AuthenticationServiceTest {
     private User buildUserForTest() {
         return User.builder().id(id).firstName(firstName).lastName(lastName).dateOfBirth(dateOfBirth)
                 .gender(Gender.MALE).email(email).phoneNumber(phoneNumber).username(username)
-                .profileImagePath(imagePath).friends(Collections.emptySet()).visible(visible)
+                .profileImagePath(imagePath).visible(visible)
                 .status("some status value").build();
     }
 }

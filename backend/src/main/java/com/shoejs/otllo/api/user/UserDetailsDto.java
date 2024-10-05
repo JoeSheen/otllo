@@ -1,7 +1,6 @@
 package com.shoejs.otllo.api.user;
 
 import java.time.LocalDate;
-import java.util.Set;
 import java.util.UUID;
 
 public record UserDetailsDto(
@@ -14,7 +13,6 @@ public record UserDetailsDto(
         String phoneNumber,
         String username,
         String profileImage,
-        Set<UserDetailsDto> friends,
         boolean visible,
         String status
 ) {}

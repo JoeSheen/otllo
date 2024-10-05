@@ -17,8 +17,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,8 +41,6 @@ class AuthenticationControllerTest {
     private final UUID id = UUID.fromString("2f9c32bb-3935-451b-8255-5898bf1ea794");
 
     private final LocalDate dateOfBirth = LocalDate.of(1993, Month.JULY, 25);
-
-    private final Set<UserDetailsDto> friends = new HashSet<>();
 
     @BeforeEach
     void setUp() {
@@ -118,7 +114,6 @@ class AuthenticationControllerTest {
         assertThat(details.phoneNumber()).isEqualTo("070123456789");
         assertThat(details.username()).isEqualTo("Colith93");
         assertThat(details.profileImage()).isEqualTo("/some/path/");
-        assertThat(details.friends()).isEmpty();
         assertThat(details.visible()).isTrue();
         assertThat(details.status()).isEqualTo("some status");
     }
@@ -126,7 +121,7 @@ class AuthenticationControllerTest {
     private AuthenticationDetailsDto buildAuthenticationDetailsForTest() {
         UserDetailsDto userDetails = new UserDetailsDto(id, "Roxanna", "Montez", dateOfBirth,
                 "FEMALE", "roxanna.montez@protonmail.com", "070123456789", "Colith93",
-                "/some/path/", friends, true, "some status");
+                "/some/path/", true, "some status");
         return new AuthenticationDetailsDto("test-jwt", userDetails);
     }
 }

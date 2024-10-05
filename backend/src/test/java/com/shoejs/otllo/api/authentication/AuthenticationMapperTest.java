@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +50,6 @@ class AuthenticationMapperTest {
         assertThat(user.getUsername()).isEqualTo("Antfeen");
         assertThat(user.getPassword()).isEqualTo("encodedPassword");
         assertThat(user.getProfileImagePath()).isEqualTo("/some/path/");
-        assertThat(user.getFriends()).isNull();
         assertThat(user.isVisible()).isTrue();
         assertThat(user.getStatus()).isEqualTo("some status");
     }
@@ -62,7 +60,7 @@ class AuthenticationMapperTest {
         User user = User.builder().id(UUID.fromString("c32a03c7-a51f-40b7-aa4b-6a8e9417e327"))
                 .firstName("Anthony").lastName("McCord").dateOfBirth(LocalDate.of(1991, Month.MAY, 23))
                 .gender(Gender.MALE).email("anthony.mccord@hotmail.com").phoneNumber("070123456789").username("Antfeen")
-                .profileImagePath("/some/path/").friends(Collections.emptySet()).visible(true).status("some status").build();
+                .profileImagePath("/some/path/").visible(true).status("some status").build();
 
         AuthenticationDetailsDto authDetails = mapper.userToAuthenticationDetailsDto(jwt, user);
 
@@ -78,7 +76,6 @@ class AuthenticationMapperTest {
         assertThat(userDetails.phoneNumber()).isEqualTo("070123456789");
         assertThat(userDetails.username()).isEqualTo("Antfeen");
         assertThat(userDetails.profileImage()).isEqualTo("/some/path/");
-        assertThat(userDetails.friends()).isEmpty();
         assertThat(userDetails.visible()).isTrue();
         assertThat(userDetails.status()).isEqualTo("some status");
     }

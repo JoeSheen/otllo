@@ -19,7 +19,6 @@ public abstract class AuthenticationMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "password", qualifiedByName = "encodePassword")
-    @Mapping(target = "friends", ignore = true)
     public abstract User signupCredentialsDtoToUser(SignupCredentialsDto credentialsDto);
 
     @Mapping(target = "token", source = "jwt")
