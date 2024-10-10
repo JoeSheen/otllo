@@ -16,6 +16,9 @@ import org.hibernate.annotations.UuidGenerator.Style;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Super class used by all entities within the Otllo application
+ */
 @Getter
 @Setter
 @SuperBuilder
