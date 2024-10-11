@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +29,6 @@ class UserMapperTest {
         assertThat(userDetails.phoneNumber()).isEqualTo("070123456789");
         assertThat(userDetails.username()).isEqualTo("Agook1993");
         assertThat(userDetails.profileImage()).isEqualTo("/some/path/");
-        assertThat(userDetails.friends()).isEmpty();
         assertThat(userDetails.visible()).isTrue();
         assertThat(userDetails.status()).isEqualTo("some status value");
     }
@@ -53,7 +51,6 @@ class UserMapperTest {
         assertThat(user.getPhoneNumber()).isEqualTo("070123456789");
         assertThat(user.getUsername()).isEqualTo("Agook1993");
         assertThat(user.getProfileImagePath()).isEqualTo("/some/path/");
-        assertThat(user.getFriends()).isEmpty();
         assertThat(user.isVisible()).isTrue();
         assertThat(user.getStatus()).isEqualTo("some status value");
     }
@@ -64,7 +61,7 @@ class UserMapperTest {
 
         return User.builder().id(id).firstName(firstName).lastName(lastName).dateOfBirth(dateOfBirth)
                 .gender(Gender.FEMALE).email(email).phoneNumber(phoneNumber)
-                .username("Agook1993").profileImagePath("/some/path/").friends(Collections.emptySet())
+                .username("Agook1993").profileImagePath("/some/path/")
                 .visible(true).status("some status value").build();
     }
 }

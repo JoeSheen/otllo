@@ -10,6 +10,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service exposing actions that can be performed during authentication
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -22,6 +25,13 @@ public class AuthenticationService {
 
     private final AuthenticationMapper mapper;
 
+    /**
+     * Method for creating a new user and returning the required authentication details.
+     *
+     * @param credentialsDto details used to create the new user.
+     * @throws DuplicateEntityException if the email contained in the {@link SignupCredentialsDto} is already registered
+     * @return {@link AuthenticationDetailsDto} based off the provided fields
+     */
     public AuthenticationDetailsDto signup(SignupCredentialsDto credentialsDto) {
         if (userRepository.existsByEmail(credentialsDto.email())) {
             throw new DuplicateEntityException("Email already registered");
@@ -31,6 +41,12 @@ public class AuthenticationService {
         return mapper.userToAuthenticationDetailsDto(jwt, user);
     }
 
+    /**
+     * Method for authenticating a user that is already registered.
+     *
+     * @param credentialsDto details used to authenticate the returning user
+     * @return {@link AuthenticationDetailsDto} for the returning user
+     */
     public AuthenticationDetailsDto login(LoginCredentialsDto credentialsDto) {
         UsernamePasswordAuthenticationToken usernamePasswordToken =
                 new UsernamePasswordAuthenticationToken(credentialsDto.username(), credentialsDto.password());

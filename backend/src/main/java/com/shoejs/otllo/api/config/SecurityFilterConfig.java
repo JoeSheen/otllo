@@ -18,6 +18,9 @@ import java.util.List;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
+/**
+ * Configuration class for the applications security filter and cors config beans
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor

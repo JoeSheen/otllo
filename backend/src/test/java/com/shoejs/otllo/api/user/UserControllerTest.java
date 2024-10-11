@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -17,12 +16,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -108,12 +104,6 @@ class UserControllerTest {
     }
 
     @Test
-    @Disabled("disabled till proper implementation is done")
-    void testAddFriendToUser() {
-        fail();
-    }
-
-    @Test
     void testDeleteUserByIdReturnsTrue() throws Exception {
         when(userService.deleteUserById(id)).thenReturn(true);
 
@@ -146,17 +136,15 @@ class UserControllerTest {
         assertThat(userDetailsDto.phoneNumber()).isEqualTo("070123456789");
         assertThat(userDetailsDto.username()).isEqualTo("ProSimmons");
         assertThat(userDetailsDto.profileImage()).isEqualTo("/some/path/");
-        assertThat(userDetailsDto.friends()).isEmpty();
         assertThat(userDetailsDto.visible()).isEqualTo(expectedVisibility);
         assertThat(userDetailsDto.status()).isEqualTo("some status value");
     }
 
     private UserDetailsDto buildUserDetailsForTest(boolean visibility) {
         LocalDate dateOfBirth = LocalDate.of(1984, Month.APRIL, 10);
-        Set<UserDetailsDto> friends = new HashSet<>();
 
         return new UserDetailsDto(id, "Charles", "Simmons", dateOfBirth, "MALE",
                 "charles.simmons@protonmail.com", "070123456789", "ProSimmons",
-                "/some/path/", friends, visibility, "some status value");
+                "/some/path/", visibility, "some status value");
     }
 }
