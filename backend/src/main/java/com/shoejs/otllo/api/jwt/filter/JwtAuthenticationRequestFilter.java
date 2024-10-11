@@ -23,6 +23,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/**
+ * Filter for processing JSON Web Tokens included in requests
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationRequestFilter extends OncePerRequestFilter {
@@ -50,10 +53,11 @@ public class JwtAuthenticationRequestFilter extends OncePerRequestFilter {
                     }
                 }
             }
-            filterChain.doFilter(request, response);
         } catch (Exception ex) {
             this.handleAuthenticationException(request, response, ex);
+            return;
         }
+        filterChain.doFilter(request, response);
     }
 
     private boolean isUnauthenticated() {

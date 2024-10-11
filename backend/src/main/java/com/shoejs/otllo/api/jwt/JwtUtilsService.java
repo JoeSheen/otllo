@@ -21,6 +21,9 @@ import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+/**
+ * Service for dealing with JSON Web Tokens
+ */
 @Service
 public class JwtUtilsService {
 
