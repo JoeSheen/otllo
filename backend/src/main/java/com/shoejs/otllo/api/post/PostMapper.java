@@ -1,7 +1,6 @@
 package com.shoejs.otllo.api.post;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
@@ -13,7 +12,10 @@ public interface PostMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "user", ignore = true)
-    Post postCreationDtoToPost(PostCreationDto postCreationDto);
+    Post postCreateUpdateDtoToPost(PostCreateUpdateDto createDto);
 
     PostDetailsDto postToPostDetailsDto(Post post);
+
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    void updatePostFromDto(@MappingTarget Post post, PostCreateUpdateDto updateDto);
 }

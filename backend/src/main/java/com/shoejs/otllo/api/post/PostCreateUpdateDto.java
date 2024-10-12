@@ -1,6 +1,6 @@
 package com.shoejs.otllo.api.post;
 
-public record PostCreationDto(
+public record PostCreateUpdateDto(
         String title,
         String body
 ) {}
