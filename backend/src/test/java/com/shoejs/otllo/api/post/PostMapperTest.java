@@ -1,5 +1,6 @@
 package com.shoejs.otllo.api.post;
 
+import com.shoejs.otllo.api.user.User;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PostMapperTest {
+
+    private final User user = User.builder().username("Ficky97").build();
 
     @Test
     void testPostCreateUpdateDtoToPost() {
@@ -37,6 +40,7 @@ class PostMapperTest {
         assertThat(detailsDto.updatedAt()).isEqualTo(LocalDateTime.of(2024, Month.OCTOBER, 12, 19, 32, 4));
         assertThat(detailsDto.title()).isEqualTo("some post");
         assertThat(detailsDto.body()).isEqualTo("post body");
+        assertThat(detailsDto.author()).isEqualTo("Ficky97");
     }
 
     @Test
@@ -52,6 +56,7 @@ class PostMapperTest {
         assertThat(post.getUpdatedAt()).isEqualTo(LocalDateTime.of(2024, Month.OCTOBER, 12, 19, 32, 4));
         assertThat(post.getTitle()).isEqualTo("Updated title");
         assertThat(post.getBody()).isEqualTo("Updated Body!");
+        assertThat(post.getUser()).isEqualTo(user);
     }
 
     private Post createPostForTest() {
@@ -59,6 +64,7 @@ class PostMapperTest {
         LocalDateTime createdAt = LocalDateTime.of(2024, Month.OCTOBER, 1, 9, 0, 0);
         LocalDateTime updatedAt = LocalDateTime.of(2024, Month.OCTOBER, 12, 19, 32, 4);
 
-        return Post.builder().id(id).createdAt(createdAt).updatedAt(updatedAt).title("some post").body("post body").build();
+        return Post.builder().id(id).createdAt(createdAt).updatedAt(updatedAt).title("some post").body("post body")
+                .user(user).build();
     }
 }

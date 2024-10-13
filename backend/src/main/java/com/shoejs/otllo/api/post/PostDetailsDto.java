@@ -8,5 +8,6 @@ public record PostDetailsDto(
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         String title,
-        String body
+        String body,
+        String author
 ) {}

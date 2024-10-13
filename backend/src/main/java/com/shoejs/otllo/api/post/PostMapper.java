@@ -14,6 +14,7 @@ public interface PostMapper {
     @Mapping(target = "user", ignore = true)
     Post postCreateUpdateDtoToPost(PostCreateUpdateDto createDto);
 
+    @Mapping(target = "author", expression = "java(post.getUser().getUsername())")
     PostDetailsDto postToPostDetailsDto(Post post);
 
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
