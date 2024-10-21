@@ -37,7 +37,10 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePostById(@PathVariable("id") UUID id) {
-        return null;
+    public ResponseEntity<?> deletePostById(@PathVariable("id") UUID id, @AuthenticationPrincipal User user) {
+        if (postService.deletePostById(id, user)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

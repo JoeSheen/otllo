@@ -1,5 +1,7 @@
 package com.shoejs.otllo.api.post;
 
+import com.shoejs.otllo.api.exception.InvalidRequestException;
+import com.shoejs.otllo.api.exception.ResourceNotFoundException;
 import com.shoejs.otllo.api.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class PostService {
     public PostDetailsDto updatePost(UUID id, PostCreateUpdateDto updatePostDto, User user) {
         Post post = findPostOrThrow(id);
         if (!post.getUser().equals(user)) {
-            throw new RuntimeException("");
+            throw new InvalidRequestException("Only the author can update a post");
         }
         mapper.updatePostFromDto(post, updatePostDto);
         return mapper.postToPostDetailsDto(postRepository.save(post));
@@ -34,8 +36,21 @@ public class PostService {
         return mapper.postToPostDetailsDto(post);
     }
 
+    public boolean deletePostById(UUID id, User user) {
+        boolean deleted = false;
+        if (postRepository.existsById(id)) {
+            Post post = findPostOrThrow(id);
+            if (!post.getUser().equals(user)) {
+                throw new InvalidRequestException("Only the author can delete a post");
+            }
+            postRepository.delete(post);
+            deleted = true;
+        }
+        return deleted;
+    }
+
     private Post findPostOrThrow(UUID id) {
         return postRepository.findById(id).orElseThrow(() ->
-                new RuntimeException(""));
+                new ResourceNotFoundException("Post with ID: [%s] not found".formatted(id)));
     }
 }
