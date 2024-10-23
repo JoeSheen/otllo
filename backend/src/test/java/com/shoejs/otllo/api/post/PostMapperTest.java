@@ -29,7 +29,7 @@ class PostMapperTest {
     }
 
     @Test
-    void postToPostDetailsDto() {
+    void testPostToPostDetailsDto() {
         Post post = createPostForTest();
 
         PostDetailsDto detailsDto = PostMapper.INST.postToPostDetailsDto(post);
@@ -44,7 +44,7 @@ class PostMapperTest {
     }
 
     @Test
-    void updatePostFromDto() {
+    void testUpdatePostFromDto() {
         Post post = createPostForTest();
         PostCreateUpdateDto updateDto = new PostCreateUpdateDto("Updated title", "Updated Body!");
 

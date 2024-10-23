@@ -1,6 +1,7 @@
 package com.shoejs.otllo.api.exception.handler;
 
 import com.shoejs.otllo.api.exception.DuplicateEntityException;
+import com.shoejs.otllo.api.exception.InvalidRequestException;
 import com.shoejs.otllo.api.exception.ResourceNotFoundException;
 import org.assertj.core.data.TemporalUnitWithinOffset;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,12 @@ class GlobalApiExceptionHandlerTest {
     void testHandleResourceNotFoundException() {
         ApiErrorDetailsDto apiError = apiExceptionHandler.handleResourceNotFoundException(request, new ResourceNotFoundException("User with ID: [c0a801af-9254-1685-8192-5446c35a0000] not found"));
         assertApiErrorDetailsDto(apiError, 404, "User with ID: [c0a801af-9254-1685-8192-5446c35a0000] not found");
+    }
+
+    @Test
+    void testHandleInvalidRequestException() {
+        ApiErrorDetailsDto apiError = apiExceptionHandler.handleInvalidRequestException(request, new InvalidRequestException("Only the author can update a post"));
+        assertApiErrorDetailsDto(apiError, 400, "Only the author can update a post");
     }
 
     private void assertApiErrorDetailsDto(ApiErrorDetailsDto apiErrorDto, int expectedCode, String expectedMessage) {

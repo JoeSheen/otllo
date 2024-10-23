@@ -79,7 +79,7 @@ class UserControllerTest {
 
         when(userService.updateUserProfile(id, updateDto)).thenReturn(buildUserDetailsForTest(true));
 
-        String updateUserProfileRequest = baseRequest + "/" + id;
+        String updateUserProfileRequest = baseRequest + id;
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(updateUserProfileRequest)
                 .content(mapper.writeValueAsString(updateDto)).contentType(APPLICATION_JSON_VALUE);
 
@@ -93,7 +93,7 @@ class UserControllerTest {
     void testUpdateUserProfileReturnsBadRequest() throws Exception {
         UserUpdateDto updateDto = new UserUpdateDto("", "", "", "", "");
 
-        String updateUserProfileRequest = baseRequest + "/" + id;
+        String updateUserProfileRequest = baseRequest + id;
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(updateUserProfileRequest)
                 .content(mapper.writeValueAsString(updateDto)).contentType(APPLICATION_JSON_VALUE);
 
