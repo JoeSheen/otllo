@@ -10,6 +10,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Class encapsulating post entity data
+ */
 @Getter
 @Setter
 @Entity

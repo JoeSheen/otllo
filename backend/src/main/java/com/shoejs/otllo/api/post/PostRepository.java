@@ -5,6 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+/**
+ * Repository interface for performing CRUD operations on post objects
+ */
 @Repository
 public interface PostRepository extends JpaRepository<Post, UUID> {
 }
