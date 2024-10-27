@@ -1,5 +1,6 @@
 package com.shoejs.otllo.api.user;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,5 +27,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * @param username of the user being looked for
      * @return an {@link Optional} with a present value if the user is found, otherwise an empty Optional
      */
+    @EntityGraph(attributePaths = {"posts"})
     Optional<User> findByUsername(String username);
 }

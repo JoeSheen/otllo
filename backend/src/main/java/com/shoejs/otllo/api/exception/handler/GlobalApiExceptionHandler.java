@@ -1,6 +1,7 @@
 package com.shoejs.otllo.api.exception.handler;
 
 import com.shoejs.otllo.api.exception.DuplicateEntityException;
+import com.shoejs.otllo.api.exception.InvalidRequestException;
 import com.shoejs.otllo.api.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -44,6 +45,19 @@ public class GlobalApiExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ApiErrorDetailsDto handleResourceNotFoundException(HttpServletRequest request, ResourceNotFoundException ex) {
         return buildApiErrorDetailsDto(HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI());
+    }
+
+    /**
+     * Handler method for dealing with {@link  InvalidRequestException}
+     *
+     * @param request that caused the exception to be thrown
+     * @param ex the exception object thrown
+     * @return {@link ApiErrorDetailsDto} based on the error that occurred
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidRequestException.class)
+    public ApiErrorDetailsDto handleInvalidRequestException(HttpServletRequest request, InvalidRequestException ex) {
+        return buildApiErrorDetailsDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), request.getRequestURI());
     }
 
     /**
