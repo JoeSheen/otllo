@@ -16,7 +16,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
@@ -74,20 +74,46 @@ class PostServiceTest {
 
     @Test
     void testGetPostById() {
+        when(postRepository.findById(id)).thenReturn(Optional.of(buildPostForTest("get by ID title", "get by ID body", user)));
+
+        PostDetailsDto postDetails = postService.getPostById(id);
+
+        assertPostDetailsDto(postDetails, "get by ID title", "get by ID body");
     }
 
     @Test
-    void testGetPostByIdThrowsNotFoundException() {}
+    void testGetPostByIdThrowsNotFoundException() {
+        when(postRepository.findById(id)).thenReturn(Optional.empty());
 
-    @Test
-    void testDeletePostById() {
+        assertThatThrownBy(() -> postService.getPostById(id))
+                .isInstanceOf(ResourceNotFoundException.class).hasMessage("Post with ID: [%s] not found".formatted(id));
     }
 
     @Test
-    void testDeletePostByIdNotFoundException() {}
+    void testDeletePostByIdReturnsTrue() {
+        when(postRepository.existsById(id)).thenReturn(true);
+        when(postRepository.findById(id)).thenReturn(Optional.of(buildPostForTest("delete post", "delete body", user)));
+
+        assertThat(postService.deletePostById(id, user)).isTrue();
+        verify(postRepository, times(1)).delete(any(Post.class));
+    }
 
     @Test
-    void testDeletePostByIdThrowsInvalidRequestException() {}
+    void testDeletePostByIdReturnsFalse() {
+        when(postRepository.existsById(id)).thenReturn(false);
+
+        assertThat(postService.deletePostById(id, user)).isFalse();
+    }
+
+    @Test
+    void testDeletePostByIdThrowsInvalidRequestException() {
+        User author = User.builder().id(UUID.randomUUID()).username("#whicas").build();
+        when(postRepository.findById(id)).thenReturn(Optional.of(buildPostForTest("title", "body", author)));
+        when(postRepository.existsById(id)).thenReturn(true);
+
+        assertThatThrownBy(() -> postService.deletePostById(id, user))
+                .isInstanceOf(InvalidRequestException.class).hasMessage("Only the author can delete a post");
+    }
 
     private void assertPostDetailsDto(PostDetailsDto postDetails, String expectedTitle, String expectedBody) {
         assertThat(postDetails).isNotNull();
