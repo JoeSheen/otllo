@@ -1,5 +1,6 @@
 package com.shoejs.otllo.api.post;
 
+import com.shoejs.otllo.api.common.CollectionDetailsDto;
 import com.shoejs.otllo.api.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,14 @@ public class PostController {
     public PostDetailsDto updatePost(@PathVariable("id") UUID id,
             @Valid @RequestBody PostCreateUpdateDto updatePostDto, @AuthenticationPrincipal User user) {
         return postService.updatePost(id, updatePostDto, user);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public CollectionDetailsDto<PostDetailsDto> getAllPosts(@RequestParam(required = false) String username,
+            @RequestParam(required = false) String title, @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "25") Integer pageSize) {
+        return postService.getAllPosts(username, title, pageNumber, pageSize);
     }
 
     /**

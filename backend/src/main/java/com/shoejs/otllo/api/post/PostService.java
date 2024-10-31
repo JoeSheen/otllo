@@ -1,9 +1,13 @@
 package com.shoejs.otllo.api.post;
 
+import com.shoejs.otllo.api.common.CollectionDetailsDto;
 import com.shoejs.otllo.api.exception.InvalidRequestException;
 import com.shoejs.otllo.api.exception.ResourceNotFoundException;
 import com.shoejs.otllo.api.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -47,6 +51,12 @@ public class PostService {
         }
         mapper.updatePostFromDto(post, updatePostDto);
         return mapper.postToPostDetailsDto(postRepository.save(post));
+    }
+
+    public CollectionDetailsDto<PostDetailsDto> getAllPosts(String username, String title, Integer pageNumber, Integer pageSize) {
+        Pageable paging = PageRequest.of(pageNumber, pageSize);
+        Page<PostDetailsDto> pageDto = postRepository.findAll(paging).map(mapper::postToPostDetailsDto);
+        return new CollectionDetailsDto<>(pageDto.getContent(), pageDto.getNumber(), pageDto.getTotalPages(), pageDto.getTotalElements());
     }
 
     /**
