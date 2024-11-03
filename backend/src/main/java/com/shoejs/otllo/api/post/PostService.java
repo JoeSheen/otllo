@@ -8,9 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+
+import static org.springframework.data.jpa.domain.Specification.where;
 
 /**
  * Service for performing actions involving {@link Post} objects
@@ -53,10 +56,12 @@ public class PostService {
         return mapper.postToPostDetailsDto(postRepository.save(post));
     }
 
-    public CollectionDetailsDto<PostDetailsDto> getAllPosts(String username, String title, Integer pageNumber, Integer pageSize) {
+    public CollectionDetailsDto<PostDetailsDto> getAllPosts(String searchValue, int pageNumber, int pageSize) {
+        Specification<Post> spec = where(PostSpecification.filterByAuthorUsername(searchValue.toUpperCase()))
+                .or(PostSpecification.filterByTitle(searchValue.toUpperCase()));
         Pageable paging = PageRequest.of(pageNumber, pageSize);
-        Page<PostDetailsDto> pageDto = postRepository.findAll(paging).map(mapper::postToPostDetailsDto);
-        return new CollectionDetailsDto<>(pageDto.getContent(), pageDto.getNumber(), pageDto.getTotalPages(), pageDto.getTotalElements());
+        Page<PostDetailsDto> page = postRepository.findAll(spec, paging).map(mapper::postToPostDetailsDto);
+        return new CollectionDetailsDto<>(page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements());
     }
 
     /**

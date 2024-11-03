@@ -51,10 +51,9 @@ public class PostController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public CollectionDetailsDto<PostDetailsDto> getAllPosts(@RequestParam(required = false) String username,
-            @RequestParam(required = false) String title, @RequestParam(defaultValue = "0") Integer pageNumber,
-            @RequestParam(defaultValue = "25") Integer pageSize) {
-        return postService.getAllPosts(username, title, pageNumber, pageSize);
+    public CollectionDetailsDto<PostDetailsDto> getAllPosts(@RequestParam(defaultValue = "") String searchValue,
+            @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam(defaultValue = "25") Integer pageSize) {
+        return postService.getAllPosts(searchValue, pageNumber, pageSize);
     }
 
     /**
