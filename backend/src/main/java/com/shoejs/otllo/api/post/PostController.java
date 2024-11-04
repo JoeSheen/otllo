@@ -1,5 +1,6 @@
 package com.shoejs.otllo.api.post;
 
+import com.shoejs.otllo.api.common.CollectionDetailsDto;
 import com.shoejs.otllo.api.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,21 @@ public class PostController {
     public PostDetailsDto updatePost(@PathVariable("id") UUID id,
             @Valid @RequestBody PostCreateUpdateDto updatePostDto, @AuthenticationPrincipal User user) {
         return postService.updatePost(id, updatePostDto, user);
+    }
+
+    /**
+     * Endpoint for returning a collection of posts that match a given search value
+     *
+     * @param searchValue the search value the posts must contain (search is done on author and title)
+     * @param pageNumber number of the page being requested (default is 0)
+     * @param pageSize size of the page being requested (default is 25)
+     * @return collection of posts that contain the requested search value
+     */
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public CollectionDetailsDto<PostDetailsDto> getAllPosts(@RequestParam(defaultValue = "") String searchValue,
+            @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam(defaultValue = "25") Integer pageSize) {
+        return postService.getAllPosts(searchValue, pageNumber, pageSize);
     }
 
     /**

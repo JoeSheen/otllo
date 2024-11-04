@@ -1,12 +1,19 @@
 package com.shoejs.otllo.api.post;
 
+import com.shoejs.otllo.api.common.CollectionDetailsDto;
 import com.shoejs.otllo.api.exception.InvalidRequestException;
 import com.shoejs.otllo.api.exception.ResourceNotFoundException;
 import com.shoejs.otllo.api.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+
+import static org.springframework.data.jpa.domain.Specification.where;
 
 /**
  * Service for performing actions involving {@link Post} objects
@@ -47,6 +54,20 @@ public class PostService {
         }
         mapper.updatePostFromDto(post, updatePostDto);
         return mapper.postToPostDetailsDto(postRepository.save(post));
+    }
+
+    /**
+     * Method for returning a collection of posts that match a given search value
+     * @param searchValue the search value the posts must contain
+     * @param pageNumber number of the page being requested
+     * @param pageSize size of the page being requested
+     * @return collection of posts that contain the requested search value
+     */
+    public CollectionDetailsDto<PostDetailsDto> getAllPosts(String searchValue, int pageNumber, int pageSize) {
+        Specification<Post> spec = where(PostSpecification.filterPostsBySearchValue(searchValue.toUpperCase()));
+        Pageable paging = PageRequest.of(pageNumber, pageSize);
+        Page<PostDetailsDto> page = postRepository.findAll(spec, paging).map(mapper::postToPostDetailsDto);
+        return new CollectionDetailsDto<>(page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements());
     }
 
     /**
