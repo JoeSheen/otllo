@@ -49,6 +49,14 @@ public class PostController {
         return postService.updatePost(id, updatePostDto, user);
     }
 
+    /**
+     * Endpoint for returning a collection of posts that match a given search value
+     *
+     * @param searchValue the search value the posts must contain (search is done on author and title)
+     * @param pageNumber number of the page being requested (default is 0)
+     * @param pageSize size of the page being requested (default is 25)
+     * @return collection of posts that contain the requested search value
+     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public CollectionDetailsDto<PostDetailsDto> getAllPosts(@RequestParam(defaultValue = "") String searchValue,

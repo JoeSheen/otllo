@@ -1,5 +1,6 @@
 package com.shoejs.otllo.api.post;
 
+import com.shoejs.otllo.api.common.CollectionDetailsDto;
 import com.shoejs.otllo.api.exception.InvalidRequestException;
 import com.shoejs.otllo.api.exception.ResourceNotFoundException;
 import com.shoejs.otllo.api.user.User;
@@ -8,8 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -70,6 +75,22 @@ class PostServiceTest {
 
         assertThatThrownBy(() -> postService.updatePost(id, new PostCreateUpdateDto("title", "body"), user))
                 .isInstanceOf(InvalidRequestException.class).hasMessage("Only the author can update a post");
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void testGetAllPosts() {
+        when(postRepository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(buildPostForTest("all posts", "some text for the body", user))));
+
+        CollectionDetailsDto<PostDetailsDto> collectionDetailsDto = postService.getAllPosts("all posts", 0, 25);
+
+        assertThat(collectionDetailsDto).isNotNull();
+        assertThat(collectionDetailsDto.details().size()).isEqualTo(1);
+        assertPostDetailsDto(collectionDetailsDto.details().get(0), "all posts", "some text for the body");
+        assertThat(collectionDetailsDto.currentPage()).isEqualTo(0);
+        assertThat(collectionDetailsDto.totalPages()).isEqualTo(1);
+        assertThat(collectionDetailsDto.totalElements()).isEqualTo(1L);
     }
 
     @Test

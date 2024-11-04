@@ -1,8 +1,10 @@
 package com.shoejs.otllo.api.post;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.shoejs.otllo.api.common.CollectionDetailsDto;
 import com.shoejs.otllo.api.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -101,6 +104,25 @@ class PostControllerTest {
 
         assertThat(result.getResponse().getContentAsString()).isBlank();
         assertThat(result.getResponse().getErrorMessage()).isEqualTo("Invalid request content.");
+    }
+
+    @Test
+    void testGetAllPosts() throws Exception {
+        when(postService.getAllPosts(any(String.class), any(Integer.class), any(Integer.class)))
+                .thenReturn(new CollectionDetailsDto<>(List.of(buildPostDetailsForTest("title", "body")), 0, 1, 1L));
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(baseRequestPath)
+                .content(APPLICATION_JSON_VALUE);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isOk()).andReturn();
+
+        CollectionDetailsDto<PostDetailsDto> collectionDetailsDto = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+        assertThat(collectionDetailsDto).isNotNull();
+        assertThat(collectionDetailsDto.details().size()).isEqualTo(1);
+        assertPostDetailsDto(collectionDetailsDto.details().get(0), "title", "body");
+        assertThat(collectionDetailsDto.currentPage()).isEqualTo(0);
+        assertThat(collectionDetailsDto.totalPages()).isEqualTo(1);
+        assertThat(collectionDetailsDto.totalElements()).isEqualTo(1L);
     }
 
     @Test

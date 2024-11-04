@@ -56,9 +56,15 @@ public class PostService {
         return mapper.postToPostDetailsDto(postRepository.save(post));
     }
 
+    /**
+     * Method for returning a collection of posts that match a given search value
+     * @param searchValue the search value the posts must contain
+     * @param pageNumber number of the page being requested
+     * @param pageSize size of the page being requested
+     * @return collection of posts that contain the requested search value
+     */
     public CollectionDetailsDto<PostDetailsDto> getAllPosts(String searchValue, int pageNumber, int pageSize) {
-        Specification<Post> spec = where(PostSpecification.filterByAuthorUsername(searchValue.toUpperCase()))
-                .or(PostSpecification.filterByTitle(searchValue.toUpperCase()));
+        Specification<Post> spec = where(PostSpecification.filterPostsBySearchValue(searchValue.toUpperCase()));
         Pageable paging = PageRequest.of(pageNumber, pageSize);
         Page<PostDetailsDto> page = postRepository.findAll(spec, paging).map(mapper::postToPostDetailsDto);
         return new CollectionDetailsDto<>(page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements());
