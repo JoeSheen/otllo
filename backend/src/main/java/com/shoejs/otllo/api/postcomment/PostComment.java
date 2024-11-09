@@ -9,6 +9,9 @@ import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Class encapsulating post comment entity data
+ */
 @Getter
 @Setter
 @Entity
