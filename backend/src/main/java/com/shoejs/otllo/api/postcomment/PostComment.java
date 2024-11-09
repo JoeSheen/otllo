@@ -22,7 +22,6 @@ public class PostComment extends AbsBaseEntity {
     private String comment;
 
     @ManyToOne
-    //@JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne
