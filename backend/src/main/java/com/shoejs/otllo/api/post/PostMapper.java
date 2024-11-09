@@ -34,6 +34,7 @@ public interface PostMapper {
 
     /**
      * Method declaration for updating an existing {@link Post} object
+     *
      * @param post to be updated
      * @param updateDto new details for the post
      */
