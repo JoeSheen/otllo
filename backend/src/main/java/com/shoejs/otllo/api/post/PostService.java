@@ -58,6 +58,7 @@ public class PostService {
 
     /**
      * Method for returning a collection of posts that match a given search value
+     *
      * @param searchValue the search value the posts must contain
      * @param pageNumber number of the page being requested
      * @param pageSize size of the page being requested
