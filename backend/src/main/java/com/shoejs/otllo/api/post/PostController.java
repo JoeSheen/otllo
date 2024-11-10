@@ -66,6 +66,7 @@ public class PostController {
 
     /**
      * Endpoint for getting a post via a passed in id
+     *
      * @param id of the post
      * @return post details
      */
@@ -77,6 +78,7 @@ public class PostController {
 
     /**
      * Endpoint for deleting a post via its id
+     *
      * @param id of the post
      * @param user author of the post (note only the author can delete a post)
      * @return ok response if the post was deleted otherwise returns not found
