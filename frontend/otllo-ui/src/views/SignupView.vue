@@ -2,11 +2,22 @@
 import { useVuelidate } from "@vuelidate/core";
 import { required, minValue, email, minLength } from "@vuelidate/validators";
 import { request } from "../api/axios-api";
+import Dropdown from "../components/Dropdown.vue";
 
 export default {
   name: "SignupView",
   setup: function () {
-    return { v$: useVuelidate() };
+    return {
+      v$: useVuelidate(),
+      Gender: [
+        { text: "Male", value: "MALE", default: false },
+        { text: "Female", value: "FEMALE", default: false },
+        { text: "Other", value: "OTHER", default: true },
+      ],
+    };
+  },
+  components: {
+    Dropdown,
   },
   data: function () {
     return {
@@ -54,10 +65,10 @@ export default {
     async handleSignup() {
       const isFormCorrect = await this.v$.$validate();
       if (isFormCorrect) {
-        // for now this will do
-        request("POST", "auth/signup", this.signupDetails).then((value) =>
-          console.log(value)
-        );
+        request("POST", "auth/signup", this.signupDetails).then((res) => {
+          console.log(res.data);
+          //this.$router.push("/home");
+        });
       }
     },
   },
@@ -78,6 +89,14 @@ export default {
     <div>
       <label for="dateOfBirth">Date of Birth</label>
       <input id="dateOfBirth" type="date" v-model="signupDetails.dateOfBirth" />
+    </div>
+    <div>
+      <label for="gender-dropdown">Gender</label>
+      <Dropdown
+        id="gender-dropdown"
+        :params="Gender"
+        @setGender="(g) => (signupDetails.gender = g)"
+      />
     </div>
     <div>
       <label for="email">Email</label>
