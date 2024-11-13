@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 const props = defineProps({
   params: Array,
+  eventName: String,
 });
 
 let selected = null;
@@ -17,7 +18,7 @@ const options = ref(props.params);
 
 <template>
   <div>
-    <select v-model="selected" @mouseup="$emit('setGender', selected)">
+    <select v-model="selected" @mouseup="$emit(eventName, selected)">
       <option v-for="option in options" :value="option.value">
         {{ option.text }}
       </option>

@@ -95,6 +95,7 @@ export default {
       <Dropdown
         id="gender-dropdown"
         :params="Gender"
+        :eventName="'setGender'"
         @setGender="(g) => (signupDetails.gender = g)"
       />
     </div>
