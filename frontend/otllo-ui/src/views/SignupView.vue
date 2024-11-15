@@ -2,7 +2,6 @@
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minValue, minLength } from "@vuelidate/validators";
 import { useRouter } from "vue-router";
-import { request } from "../api/axios-api";
 import { useAuthStore } from "../store";
 import Dropdown from "../components/Dropdown.vue";
 
@@ -24,7 +23,7 @@ const signupDetails = {
   phoneNumber: "",
   username: "",
   password: "",
-  profileImagePath: "",
+  profileImagePath: null,
   visible: true,
   status: "Hey there! I'm on Otllo",
 };
@@ -59,10 +58,11 @@ const v$ = useVuelidate(rules, signupDetails);
 async function handleSignup() {
   const isFormCorrect = await this.v$.$validate();
   if (isFormCorrect) {
-    const { access_token, userDetails } = (
-      await request("POST", "auth/signup", this.signupDetails)
-    ).data;
-    this.store.user = userDetails;
+    await this.store.authenticateUser(
+      "POST",
+      "auth/signup",
+      this.signupDetails
+    );
     this.router.push("/home");
   }
 }
