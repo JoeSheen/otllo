@@ -9,21 +9,33 @@ const props = defineProps({
 </script>
 
 <template>
-  <nav>
-    <div>
+  <div>
+    <nav class="flex items-center flex-wrap bg-slate-800 p-6 pl-10 shadow">
       <div>
-        <button @click="router.push('/')">
-          <span>Otllo</span>
+        <div class="flex items-center flex-shrink-0 mr-8">
+          <button @click="console.log('Home Clicked')">
+            <span
+              class="self-center text-3xl font-semibold whitespace-nowrap text-white"
+              >Otllo</span
+            >
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center flex-shrink-0 mr-6 w-1/3">
+        <input
+          type="text"
+          placeholder="Search..."
+          class="placeholder-gray-500 w-full rounded-full px-3 pl-4 py-1 outline-none"
+        />
+      </div>
+      <div class="absolute right-0 p-6 pr-12">
+        <button @click="console.log('Username clicked')">
+          <span
+            class="self-center text-xl font-semibold whitespace-nowrap text-white"
+            >{{ username }}</span
+          >
         </button>
       </div>
-      <div>
-        <input placeholder="Search..." />
-      </div>
-      <div>
-        <button>
-          <span>{{ username }}</span>
-        </button>
-      </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </template>
