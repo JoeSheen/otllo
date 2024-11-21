@@ -17,8 +17,12 @@ const options = ref(props.params);
 </script>
 
 <template>
-  <div>
-    <select v-model="selected" @mouseup="$emit(eventName, selected)">
+  <div class="w-full pr-2">
+    <select
+      class="w-full"
+      v-model="selected"
+      @mouseup="$emit(eventName, selected)"
+    >
       <option v-for="option in options" :value="option.value">
         {{ option.text }}
       </option>

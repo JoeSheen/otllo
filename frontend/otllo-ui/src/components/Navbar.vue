@@ -5,6 +5,7 @@ const router = useRouter();
 
 const props = defineProps({
   username: String,
+  userId: String,
 });
 </script>
 
@@ -13,9 +14,9 @@ const props = defineProps({
     <nav class="flex items-center flex-wrap bg-slate-800 p-6 pl-10 shadow">
       <div>
         <div class="flex items-center flex-shrink-0 mr-8">
-          <button @click="console.log('Home Clicked')">
+          <button @click="router.push('/home')">
             <span
-              class="self-center text-3xl font-semibold whitespace-nowrap text-white"
+              class="self-center text-3xl font-semibold whitespace-nowrap text-white hover:italic"
               >Otllo</span
             >
           </button>
@@ -29,9 +30,9 @@ const props = defineProps({
         />
       </div>
       <div class="absolute right-0 p-6 pr-12">
-        <button @click="console.log('Username clicked')">
+        <button @click="router.push('/users/' + userId + '/profile')">
           <span
-            class="self-center text-xl font-semibold whitespace-nowrap text-white"
+            class="self-center text-xl font-semibold whitespace-nowrap text-white hover:italic"
             >{{ username }}</span
           >
         </button>

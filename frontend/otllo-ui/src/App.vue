@@ -8,7 +8,7 @@ const store = useAuthStore();
 <template>
   <main>
     <div v-if="store.isAuthenticated()">
-      <Navbar :username="store.user.username" />
+      <Navbar :username="store.user.username" :userId="store.user.id" />
     </div>
     <router-view></router-view>
   </main>

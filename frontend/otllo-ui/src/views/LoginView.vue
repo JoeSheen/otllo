@@ -33,7 +33,7 @@ async function handleLogin() {
 </script>
 
 <template>
-  <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-36 px-8">
+  <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-44 px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <h1 class="text-center font-bold tracking-tight text-gray-900 text-3xl">
         Otllo
