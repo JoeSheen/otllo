@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { UserDetails } from "../types/UserDetails.interface";
-import { request } from "../api/axios-api";
+import { UserDetails } from "../../types/UserDetails.interface";
+import { request } from "../../api/axios-api";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({

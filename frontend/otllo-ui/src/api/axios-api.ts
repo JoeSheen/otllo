@@ -8,11 +8,18 @@ const axiosInst = axios.create({
 export const request = (
   method: string,
   url: string,
-  data: any
+  data?: any,
+  token?: string | null
 ): Promise<AxiosResponse<any, any>> => {
+  let headers = {};
+  if (token) {
+    headers = { Authorization: `Bearer ${token}` };
+  }
+
   return axiosInst({
     method: method,
     url: url,
     data: data,
+    headers: headers,
   });
 };

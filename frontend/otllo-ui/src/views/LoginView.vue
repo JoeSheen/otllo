@@ -3,7 +3,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { useRouter } from "vue-router";
 import { request } from "../api/axios-api";
-import { useAuthStore } from "../store";
+import { useAuthStore } from "../store/auth";
 
 const router = useRouter();
 const store = useAuthStore();

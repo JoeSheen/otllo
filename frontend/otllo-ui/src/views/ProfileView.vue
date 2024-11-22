@@ -1,21 +1,51 @@
-<script setup>
-import { useAuthStore } from "../store";
+<script>
+import { useRoute } from "vue-router";
+import { useUserStore } from "../store/user";
 
-const store = useAuthStore();
+export default {
+  data() {
+    return {
+      user: null,
+      isLoading: true,
+    };
+  },
+  mounted() {
+    this.loadData();
+  },
+  methods: {
+    loadData: async function () {
+      const route = useRoute();
+      const store = useUserStore();
 
-const user = store.user;
+      const params = route.params;
+      const userData = await store.getUserProfile(params.id);
+      if (userData) {
+        this.user = userData;
+        this.isLoading = false;
+      }
+    },
+  },
+};
 </script>
 
 <template>
-  <div class="bg-slate-100">
+  <div v-if="!isLoading" class="bg-slate-100">
     <div class="flex min-h-full flex-row">
       <div class="px-10 py-4 md:w-2/3">
-        <div class="flex flex-row border rounded-lg bg-slate-50 pb-2">
+        <div class="flex flex-row border rounded-lg bg-slate-50 pb-3">
           <!--<div>Background Image</div>
           <div>Profile Image</div>-->
           <div class="pl-3 pt-4">
-            <p>{{ user.firstName }} {{ user.lastName }}</p>
-            <p>{{ user.username }}</p>
+            <p>
+              <span class="text-lg font-medium text-zinc-900"
+                >{{ user.firstName }} {{ user.lastName }}</span
+              >
+            </p>
+            <p>
+              <span class="text-base font-normal text-zinc-600">{{
+                user.username
+              }}</span>
+            </p>
           </div>
           <div class="m-0 ml-auto">
             <div class="flex flex-row">
@@ -48,22 +78,26 @@ const user = store.user;
         <div class="border rounded-lg bg-slate-50 pb-2">
           <div class="w-full grid grid-cols-1 divide-y">
             <div class="pl-4 py-2">
-              <span>Info</span>
+              <span class="text-lg font-medium text-zinc-900">Info</span>
             </div>
             <div class="pl-4 py-2">
               <ul>
                 <li>
-                  <span>Email: {{ user.email }}</span>
+                  <span
+                    >Email: <span>{{ user.email }}</span></span
+                  >
                 </li>
                 <li>
-                  <span>Phone Number: {{ user.phoneNumber }}</span>
+                  <span
+                    >Phone Number: <span>{{ user.phoneNumber }}</span></span
+                  >
                 </li>
-                <li>
+                <!--li>
                   <span>Location: {{ "London" }}</span>
                 </li>
                 <li>
                   <span>Connections: {{ "200" }}</span>
-                </li>
+                </li-->
               </ul>
             </div>
           </div>
@@ -75,7 +109,7 @@ const user = store.user;
       <div class="w-full border rounded-lg bg-slate-50 pb-2">
         <div class="grid grid-cols-1 divide-y">
           <div class="pl-4 py-2">
-            <span>About</span>
+            <span class="text-lg font-medium text-zinc-900">About</span>
           </div>
           <div class="pl-4 py-4">
             <span>{{ user.status }}</span>
@@ -83,7 +117,5 @@ const user = store.user;
         </div>
       </div>
     </div>
-
-    <div></div>
   </div>
 </template>

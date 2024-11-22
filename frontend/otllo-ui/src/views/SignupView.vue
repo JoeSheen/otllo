@@ -2,7 +2,7 @@
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minValue, minLength } from "@vuelidate/validators";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "../store";
+import { useAuthStore } from "../store/auth";
 import Dropdown from "../components/Dropdown.vue";
 
 const router = useRouter();
