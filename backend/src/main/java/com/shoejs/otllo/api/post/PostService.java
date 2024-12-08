@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +67,8 @@ public class PostService {
      */
     public CollectionDetailsDto<PostDetailsDto> getAllPosts(String searchValue, int pageNumber, int pageSize) {
         Specification<Post> spec = where(PostSpecification.filterPostsBySearchValue(searchValue.toUpperCase()));
-        Pageable paging = PageRequest.of(pageNumber, pageSize);
+        Sort sort = Sort.by(Sort.Direction.ASC, "createdAt");
+        Pageable paging = PageRequest.of(pageNumber, pageSize, sort);
         Page<PostDetailsDto> page = postRepository.findAll(spec, paging).map(mapper::postToPostDetailsDto);
         return new CollectionDetailsDto<>(page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements());
     }
