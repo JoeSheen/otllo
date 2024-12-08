@@ -67,7 +67,7 @@ public class PostService {
      */
     public CollectionDetailsDto<PostDetailsDto> getAllPosts(String searchValue, int pageNumber, int pageSize) {
         Specification<Post> spec = where(PostSpecification.filterPostsBySearchValue(searchValue.toUpperCase()));
-        Sort sort = Sort.by(Sort.Direction.ASC, "createdAt");
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
         Pageable paging = PageRequest.of(pageNumber, pageSize, sort);
         Page<PostDetailsDto> page = postRepository.findAll(spec, paging).map(mapper::postToPostDetailsDto);
         return new CollectionDetailsDto<>(page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements());
