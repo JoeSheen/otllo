@@ -1,5 +1,6 @@
 <script>
 import { usePostStore } from "../store/post";
+import PostList from "../components/PostList.vue";
 
 export default {
   data() {
@@ -26,6 +27,9 @@ export default {
       console.log("openModal");
     },
   },
+  components: {
+    PostList,
+  },
 };
 </script>
 
@@ -43,14 +47,12 @@ export default {
         </div>
       </div>
       <div>
-        <div v-if="postDetails.details.length > 0" class="h-20 overflow-y-auto">
-          <li v-for="details in postDetails.details">
-            {{ details }}
-          </li>
-        </div>
-        <div v-else>
-          <span>No Posts Found</span>
-        </div>
+        <PostList
+          id="post-list"
+          :info="'Latest Posts'"
+          :posts="postDetails"
+          class="pt-2"
+        />
       </div>
     </div>
   </div>
