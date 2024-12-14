@@ -6,12 +6,11 @@ import { PostDetails } from "../../types/PostDetails.interface";
 
 export const usePostStore = defineStore("post", {
   state: () => ({
-    PostDetails: {} as CollectionDetails<PostDetails>,
+    postDetails: {} as CollectionDetails<PostDetails>,
     authStore: useAuthStore(),
   }),
   actions: {
     async getAllPosts(searchValue = "", pageNumber = 0, pageSize = 25) {
-      let postDetails = {} as CollectionDetails<PostDetails>;
       if (this.authStore.isAuthenticated()) {
         const url =
           "posts?pageNumber=" +
@@ -21,9 +20,9 @@ export const usePostStore = defineStore("post", {
           "&searchValue=" +
           searchValue;
         const token = this.authStore?.token;
-        postDetails = (await request("GET", url, null, token)).data;
+        this.postDetails = (await request("GET", url, null, token)).data;
       }
-      return postDetails;
+      return this.postDetails;
     },
 
     isPostAuthor(username: string): boolean {

@@ -2,6 +2,7 @@
 import { usePostStore } from "../store/post";
 import { CollectionDetails } from "../types/CollectionDetails.interface";
 import { PostDetails } from "../types/PostDetails.interface";
+import formatDate from "../util/DateFormatter";
 
 export default {
   data() {
@@ -31,6 +32,10 @@ export default {
     isPostAuthor: function (username: string): boolean {
       return this.store.isPostAuthor(username);
     },
+
+    formatDate(s: string): string {
+      return formatDate(s);
+    },
   },
 };
 </script>
@@ -50,23 +55,27 @@ export default {
       </div>
       <div>
         <div>
-          <div>
-            {{ info }}
+          <div class="pt-2 pb-1 text-2xl font-semibold">
+            <span>{{ info }}</span>
           </div>
         </div>
         <div>
-          <!-- TODO: replace with infinite scroll -->
-          <div v-if="postDetails?.details.length > 0">
+          <div v-if="postDetails?.details.length > 0" class="">
             <div v-for="details in postDetails.details">
-              <div>
-                <span>{{ details.title }}</span>
-                <div>
+              <div class="border rounded-lg bg-slate-50 p-2 mb-4">
+                <div class="pb-0.5">
+                  <span class="font-medium text-lg">{{ details.title }}</span>
+                </div>
+                <div class="pb-0.5">
                   <span>{{ details.body }}</span>
                 </div>
                 <div>
-                  <span>{{ details.author }} {{ details.createdAt }}</span>
+                  <span
+                    >{{ details.author }}
+                    {{ formatDate(details.createdAt) }}</span
+                  >
                   <div v-if="details.createdAt !== details.updatedAt">
-                    {{ details.updatedAt }}
+                    {{ formatDate(details.updatedAt) }}
                   </div>
                 </div>
                 <div v-if="isPostAuthor(details.author)">
