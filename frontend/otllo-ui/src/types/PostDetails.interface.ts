@@ -1,7 +1,7 @@
 export interface PostDetails {
   id: string;
-  createdAt: Date;
-  updatedAd: Date;
+  createdAt: string;
+  updatedAt: string;
   title: string;
   body: string;
   author: string;
