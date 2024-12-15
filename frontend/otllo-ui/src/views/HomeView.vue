@@ -7,7 +7,7 @@ export default {
 </script>
 
 <template>
-  <div class="bg-slate-100 p-4">
+  <div class="bg-slate-200 p-4">
     <div>
       <PostList />
     </div>

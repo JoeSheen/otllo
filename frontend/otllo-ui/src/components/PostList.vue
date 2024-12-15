@@ -25,16 +25,16 @@ export default {
       }
     },
 
-    openModal: function () {
-      console.log("openModal called");
+    openModal: function (id?: string) {
+      console.log(id);
     },
 
     isPostAuthor: function (username: string): boolean {
       return this.store.isPostAuthor(username);
     },
 
-    formatDate(s: string): string {
-      return formatDate(s);
+    formatDate(dateString: string): string {
+      return formatDate(dateString);
     },
   },
 };
@@ -44,7 +44,7 @@ export default {
   <div>
     <div v-if="!isLoading">
       <div>
-        <div>
+        <div class="px-2">
           <input
             type="button"
             class="cursor-pointer"
@@ -55,42 +55,59 @@ export default {
       </div>
       <div>
         <div>
-          <div class="pt-2 pb-1 text-2xl font-semibold">
+          <div class="pt-2 pb-2 px-2 text-2xl font-semibold">
             <span>{{ info }}</span>
           </div>
         </div>
         <div>
-          <div v-if="postDetails?.details.length > 0" class="">
+          <div v-if="postDetails?.details.length > 0">
             <div v-for="details in postDetails.details">
-              <div class="border rounded-lg bg-slate-50 p-2 mb-4">
-                <div class="pb-0.5">
-                  <span class="font-medium text-lg">{{ details.title }}</span>
-                </div>
-                <div class="pb-0.5">
-                  <span>{{ details.body }}</span>
-                </div>
-                <div>
-                  <span
-                    >{{ details.author }}
-                    {{ formatDate(details.createdAt) }}</span
+              <div class="border rounded-lg bg-slate-50 mb-4">
+                <div class="flex flex-row pt-2 pb-0.5">
+                  <div class="px-2">
+                    <span class="text-lg font-bold">{{ details.title }}</span>
+                  </div>
+                  <div
+                    v-if="isPostAuthor(details.author)"
+                    class="m-0 ml-auto pr-4"
                   >
-                  <div v-if="details.createdAt !== details.updatedAt">
-                    {{ formatDate(details.updatedAt) }}
+                    <button
+                      class="border-2 border-slate-800 bg-slate-800 rounded-full px-4"
+                      v-on:click="openModal(details.id)"
+                    >
+                      <span class="text-center text-white font-medium"
+                        >Edit</span
+                      >
+                    </button>
                   </div>
                 </div>
-                <div v-if="isPostAuthor(details.author)">
-                  <input
-                    type="button"
-                    class="cursor-pointer"
-                    value="Edit"
-                    v-on:click="openModal()"
-                  />
+                <hr class="h-px my-1" />
+                <div class="pt-0.5 px-2">
+                  <span>{{ details.body }}</span>
+                </div>
+                <div class="flex flex-row pt-2 pb-2">
+                  <div class="px-2">
+                    <span class="font-medium text-slate-800">{{
+                      details.author
+                    }}</span>
+                  </div>
+                  <div class="m-0 ml-auto px-2">
+                    <span
+                      v-if="details.createdAt !== details.updatedAt"
+                      class="font-medium text-slate-800 px-4"
+                    >
+                      {{ formatDate(details.updatedAt) }}
+                    </span>
+                    <span v-else class="font-medium text-slate-800 px-4">
+                      {{ formatDate(details.createdAt) }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div v-else>
-            <span>No Posts Found</span>
+            <span class="pt-2 pb-1 text-xl font-semibold">No Posts Found</span>
           </div>
         </div>
       </div>
