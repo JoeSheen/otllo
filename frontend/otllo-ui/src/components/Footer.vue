@@ -1,13 +1,10 @@
 <script></script>
 
 <template>
-  <div class="p-6 bg-slate-800">
-    <footer>
+  <div>
+    <footer class="p-4 bg-slate-800">
       <div>
-        <span>
-          <!-- TODO: decide what the footer should hold -->
-          <Footer> Footer </Footer>
-        </span>
+        <span class="text-white">Footer</span>
       </div>
     </footer>
   </div>

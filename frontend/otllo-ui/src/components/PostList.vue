@@ -107,7 +107,9 @@ export default {
             </div>
           </div>
           <div v-else>
-            <span class="pt-2 pb-1 text-xl font-semibold">No Posts Found</span>
+            <span class="px-2 pt-2 pb-1 text-xl font-semibold"
+              >No Posts Found</span
+            >
           </div>
         </div>
       </div>
