@@ -29,7 +29,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="!isLoading" class="bg-slate-100">
+  <div v-if="!isLoading" class="bg-slate-200">
     <div class="flex min-h-full flex-row">
       <div class="px-10 py-4 md:w-2/3">
         <div class="flex flex-row border rounded-lg bg-slate-50 pb-3">

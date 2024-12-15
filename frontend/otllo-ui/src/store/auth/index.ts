@@ -4,8 +4,8 @@ import { request } from "../../api/axios-api";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    user: null as UserDetails | null,
-    token: null as string | null,
+    user: {} as UserDetails,
+    token: "",
   }),
   getters: {},
   actions: {

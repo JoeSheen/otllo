@@ -1,14 +1,15 @@
-<script setup>
-import { useAuthStore } from "../store/auth";
+<script>
+import PostList from "../components/PostList.vue";
 
-const store = useAuthStore();
+export default {
+  components: { PostList },
+};
 </script>
 
 <template>
-  <div class="p-10">
-    <h1>HOME</h1>
+  <div class="bg-slate-200 p-4">
     <div>
-      <p>store: {{ store.user }}</p>
+      <PostList />
     </div>
   </div>
 </template>
