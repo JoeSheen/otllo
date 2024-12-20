@@ -14,8 +14,8 @@ const store = useAuthStore();
       </div>
     </div>
     <router-view></router-view>
-    <div v-if="store.isAuthenticated()">
+    <!--div v-if="store.isAuthenticated()">
       <Footer />
-    </div>
+    </div-->
   </main>
 </template>
