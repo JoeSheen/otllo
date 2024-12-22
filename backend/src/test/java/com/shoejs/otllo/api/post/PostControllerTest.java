@@ -37,7 +37,7 @@ class PostControllerTest {
 
     private final UUID id = UUID.fromString("dfe8c6bb-f21a-41ec-8a83-7cb255f47625");
 
-    private final String baseRequestPath = "/api/v1/posts/";
+    private final String baseRequestPath = "/api/v1/posts";
 
     private final ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
@@ -81,7 +81,7 @@ class PostControllerTest {
         when(postService.updatePost(any(UUID.class), any(PostCreateUpdateDto.class), any(User.class)))
                 .thenReturn(buildPostDetailsForTest("Updated Title", "Updated body text"));
 
-        String putRequest = baseRequestPath + id;
+        String putRequest = baseRequestPath + "/" + id;
         PostCreateUpdateDto updatePostDto = new PostCreateUpdateDto("Updated Title", "Updated body text");
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(putRequest)
                 .content(mapper.writeValueAsString(updatePostDto)).contentType(APPLICATION_JSON_VALUE);
@@ -94,7 +94,7 @@ class PostControllerTest {
 
     @Test
     void testUpdatePostReturnsBadRequest() throws Exception {
-        String putRequest = baseRequestPath + id;
+        String putRequest = baseRequestPath + "/" + id;
 
         PostCreateUpdateDto updatePostDto = new PostCreateUpdateDto("   ", "       ");
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(putRequest)
@@ -129,7 +129,7 @@ class PostControllerTest {
     void testGetPostById() throws Exception {
         when(postService.getPostById(any(UUID.class))).thenReturn(buildPostDetailsForTest("get Post", "some text"));
 
-        String getByIdRequest = baseRequestPath + id;
+        String getByIdRequest = baseRequestPath + "/" + id;
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(getByIdRequest)
                 .contentType(APPLICATION_JSON_VALUE);
 
@@ -143,7 +143,7 @@ class PostControllerTest {
     void testDeletePostByIdReturnsOk() throws Exception {
         when(postService.deletePostById(any(UUID.class), any(User.class))).thenReturn(true);
 
-        String deleteRequest = baseRequestPath + id;
+        String deleteRequest = baseRequestPath + "/" + id;
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete(deleteRequest)
                 .contentType(APPLICATION_JSON_VALUE);
 
@@ -154,7 +154,7 @@ class PostControllerTest {
     void testDeletePostByIdReturnsNotFound() throws Exception {
         when(postService.deletePostById(any(UUID.class), any(User.class))).thenReturn(false);
 
-        String deleteRequest = baseRequestPath + id;
+        String deleteRequest = baseRequestPath + "/" + id;
         MockHttpServletRequestBuilder requestBuilders = MockMvcRequestBuilders.delete(deleteRequest)
                 .content(APPLICATION_JSON_VALUE);
 
