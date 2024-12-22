@@ -55,6 +55,20 @@ class UserMapperTest {
         assertThat(user.getStatus()).isEqualTo("some status value");
     }
 
+    @Test
+    void testUserToUserSummaryDto() {
+        User user = buildUserForTest("Mary", "Wright", "mary_wright1993@outlook.co.uk", "079876543210");
+
+        UserSummaryDto summaryDto = UserMapper.INST.userToUserSummaryDto(user);
+
+        assertThat(summaryDto).isNotNull();
+        assertThat(summaryDto.id()).isEqualTo(UUID.fromString("e01cc284-933d-42c7-89eb-70411b394cd2"));
+        assertThat(summaryDto.username()).isEqualTo("Agook1993");
+        assertThat(summaryDto.profileImage()).isEqualTo("/some/path/");
+        assertThat(summaryDto.firstName()).isEqualTo("Mary");
+        assertThat(summaryDto.lastName()).isEqualTo("Wright");
+    }
+
     private User buildUserForTest(String firstName, String lastName, String email, String phoneNumber) {
         final UUID id = UUID.fromString("e01cc284-933d-42c7-89eb-70411b394cd2");
         final LocalDate dateOfBirth = LocalDate.of(1993, Month.AUGUST, 29);

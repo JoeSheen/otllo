@@ -28,4 +28,7 @@ public interface UserMapper {
      */
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     void updateUserFromDto(@MappingTarget User user, UserUpdateDto updateDto);
+
+    @Mapping(target = "profileImage", source = "profileImagePath")
+    UserSummaryDto userToUserSummaryDto(User user);
 }
