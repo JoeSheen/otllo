@@ -36,7 +36,7 @@ class UserControllerTest {
 
     private final UUID id = UUID.fromString("fec26fd5-3575-4865-bb3b-b078ca2a82e5");
 
-    private final String baseRequest = "/api/v1/users/";
+    private final String baseRequest = "/api/v1/users";
 
     private MockMvc mockMvc;
 
@@ -70,7 +70,7 @@ class UserControllerTest {
     void testGetUserDetailsForProfile() throws Exception {
         when(userService.getUserDetailsForProfile(id)).thenReturn(buildUserDetailsForTest(true));
 
-        String getRequest = baseRequest + id + "/profile";
+        String getRequest = baseRequest + "/" + id + "/profile";
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(getRequest)
                 .contentType(APPLICATION_JSON_VALUE);
 
@@ -84,7 +84,7 @@ class UserControllerTest {
     void testToggleUserVisibility() throws Exception {
         when(userService.toggleUserVisibility(id, false)).thenReturn(buildUserDetailsForTest(false));
 
-        String toggleVisibilityRequest = baseRequest + "togglevisibility/" + id;
+        String toggleVisibilityRequest = baseRequest + "/" + "togglevisibility/" + id;
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch(toggleVisibilityRequest)
                 .param("visibility", "false").contentType(APPLICATION_JSON_VALUE);
 
@@ -101,7 +101,7 @@ class UserControllerTest {
 
         when(userService.updateUserProfile(id, updateDto)).thenReturn(buildUserDetailsForTest(true));
 
-        String updateUserProfileRequest = baseRequest + id;
+        String updateUserProfileRequest = baseRequest + "/" + id;
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(updateUserProfileRequest)
                 .content(mapper.writeValueAsString(updateDto)).contentType(APPLICATION_JSON_VALUE);
 
@@ -115,7 +115,7 @@ class UserControllerTest {
     void testUpdateUserProfileReturnsBadRequest() throws Exception {
         UserUpdateDto updateDto = new UserUpdateDto("", "", "", "", "");
 
-        String updateUserProfileRequest = baseRequest + id;
+        String updateUserProfileRequest = baseRequest + "/" + id;
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(updateUserProfileRequest)
                 .content(mapper.writeValueAsString(updateDto)).contentType(APPLICATION_JSON_VALUE);
 
@@ -129,7 +129,7 @@ class UserControllerTest {
     void testDeleteUserByIdReturnsTrue() throws Exception {
         when(userService.deleteUserById(id)).thenReturn(true);
 
-        String deleteRequest = baseRequest + id;
+        String deleteRequest = baseRequest + "/" + id;
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete(deleteRequest)
                 .contentType(APPLICATION_JSON_VALUE);
 
