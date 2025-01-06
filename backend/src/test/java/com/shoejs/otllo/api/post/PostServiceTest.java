@@ -7,6 +7,7 @@ import com.shoejs.otllo.api.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
@@ -78,9 +79,8 @@ class PostServiceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void testGetAllPosts() {
-        when(postRepository.findAll(any(Specification.class), any(Pageable.class)))
+        when(postRepository.findAll(ArgumentMatchers.<Specification<Post>>any(), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(buildPostForTest("all posts", "some text for the body", user))));
 
         CollectionDetailsDto<PostDetailsDto> collectionDetailsDto = postService.getAllPosts("all posts", 0, 25);
