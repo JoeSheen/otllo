@@ -1,11 +1,16 @@
 package com.shoejs.otllo.api.user;
 
+import com.shoejs.otllo.api.common.CollectionDetailsDto;
 import com.shoejs.otllo.api.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -31,12 +36,28 @@ class UserServiceTest {
     }
 
     @Test
+    void testGetAllUsers() {
+        when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(buildUserForTest("frank.long@gmail.com", "070123456789", true))));
+
+        CollectionDetailsDto<UserDetailsDto> collectionDetailsDto = userService.getAllUsers("Frank", 0, 50);
+
+        assertThat(collectionDetailsDto).isNotNull();
+        assertThat(collectionDetailsDto.details().size()).isEqualTo(1);
+        assertUserDetailsDto(collectionDetailsDto.details().get(0), "frank.long@gmail.com", "070123456789", true);
+        assertThat(collectionDetailsDto.currentPage()).isEqualTo(0);
+        assertThat(collectionDetailsDto.totalPages()).isEqualTo(1);
+        assertThat(collectionDetailsDto.totalElements()).isEqualTo(1L);
+    }
+
+    @Test
     void testGetUserDetailsForProfile() {
         when(userRepository.findById(id)).thenReturn(Optional.of(buildUserForTest("frank.long@gmail.com", "070123456789", true)));
 
         UserDetailsDto userDetails = userService.getUserDetailsForProfile(id);
 
         assertUserDetailsDto(userDetails, "frank.long@gmail.com", "070123456789", true);
+        verify(userRepository, times(1)).findById(id);
     }
 
     @Test
@@ -55,6 +76,7 @@ class UserServiceTest {
         UserDetailsDto userDetails = userService.toggleUserVisibility(id, false);
 
         assertUserDetailsDto(userDetails, "frank.long@gmail.com", "070123456789", false);
+        verify(userRepository, times(1)).findById(id);
         verify(userRepository, times(1)).save(any(User.class));
     }
 
@@ -76,6 +98,7 @@ class UserServiceTest {
 
         UserDetailsDto userDetails = userService.updateUserProfile(id, updateDto);
         assertUserDetailsDto(userDetails, "frank.long85@outlook.co.uk", "079876543210", true);
+        verify(userRepository, times(1)).findById(id);
     }
 
     @Test
@@ -120,8 +143,6 @@ class UserServiceTest {
         assertThat(userDetailsDto.profileImage()).isEqualTo("/some/path/");
         assertThat(userDetailsDto.visible()).isEqualTo(expectedVisibility);
         assertThat(userDetailsDto.status()).isEqualTo("some status value");
-
-        verify(userRepository, times(1)).findById(id);
     }
 
     private User buildUserForTest(String email, String phoneNumber, boolean visibility) {
