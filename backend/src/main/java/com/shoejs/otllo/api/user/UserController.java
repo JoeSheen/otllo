@@ -1,5 +1,6 @@
 package com.shoejs.otllo.api.user;
 
+import com.shoejs.otllo.api.common.CollectionDetailsDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,23 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+
+    /**
+     * Endpoint for returning a collection of users that match a given search value
+     *
+     * @param searchValue the search value the users must returned must fulfil
+     * @param pageNumber number of the page being requested (default 0)
+     * @param pageSize size of the page being requested (default 150)
+     * @return collection of users that contain that match the provided search value
+     */
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public CollectionDetailsDto<UserDetailsDto> getAllUsers(
+            @RequestParam(defaultValue = "") String searchValue,
+            @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam(defaultValue = "150") Integer pageSize) {
+        // TODO: replace UserDetailsDto with UserSummaryDto once that has been merged into master
+        return userService.getAllUsers(searchValue.toUpperCase(), pageNumber, pageSize);
+    }
 
     /**
      * Method for returning user details for the passed in id

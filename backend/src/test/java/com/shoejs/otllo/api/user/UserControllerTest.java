@@ -1,8 +1,10 @@
 package com.shoejs.otllo.api.user;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.shoejs.otllo.api.common.CollectionDetailsDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +18,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,6 +46,24 @@ class UserControllerTest {
     void setUp() {
         UserController controller = new UserController(userService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    }
+
+    @Test
+    void testGetAllUsers() throws Exception {
+        when(userService.getAllUsers(any(String.class), any(Integer.class), any(Integer.class)))
+                .thenReturn(new CollectionDetailsDto<>(List.of(buildUserDetailsForTest(true)), 0, 1, 1L));
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(baseRequest)
+                .content(APPLICATION_JSON_VALUE);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isOk()).andReturn();
+        CollectionDetailsDto<UserDetailsDto> collectionDetailsDto = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+        assertThat(collectionDetailsDto).isNotNull();
+        assertThat(collectionDetailsDto.details().size()).isEqualTo(1);
+        assertUserDetailsDto(collectionDetailsDto.details().get(0), true);
+        assertThat(collectionDetailsDto.currentPage()).isEqualTo(0);
+        assertThat(collectionDetailsDto.totalPages()).isEqualTo(1);
+        assertThat(collectionDetailsDto.totalElements()).isEqualTo(1L);
     }
 
     @Test
