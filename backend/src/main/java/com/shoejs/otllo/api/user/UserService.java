@@ -31,11 +31,11 @@ public class UserService {
      * @param pageSize size of the page being requested
      * @return collection of users that contain the requested value
      */
-    public CollectionDetailsDto<UserDetailsDto> getAllUsers(String searchValue, int pageNumber, int pageSize) {
+    public CollectionDetailsDto<UserSummaryDto> getAllUsers(String searchValue, int pageNumber, int pageSize) {
         Specification<User> spec = Specification.where(UserSpecification.filterUsersBySearchValue(searchValue));
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         Pageable paging = PageRequest.of(pageNumber, pageSize, sort);
-        Page<UserDetailsDto> page = userRepository.findAll(spec, paging).map(mapper::userToUserDetailsDto);
+        Page<UserSummaryDto> page = userRepository.findAll(spec, paging).map(mapper::userToUserSummaryDto);
         return new CollectionDetailsDto<>(page.getContent(), page.getNumber(), page.getTotalPages(), page.getTotalElements());
     }
 

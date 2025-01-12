@@ -40,11 +40,11 @@ class UserServiceTest {
         when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any(), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(buildUserForTest("frank.long@gmail.com", "070123456789", true))));
 
-        CollectionDetailsDto<UserDetailsDto> collectionDetailsDto = userService.getAllUsers("Frank", 0, 50);
+        CollectionDetailsDto<UserSummaryDto> collectionDetailsDto = userService.getAllUsers("Frank", 0, 50);
 
         assertThat(collectionDetailsDto).isNotNull();
         assertThat(collectionDetailsDto.details().size()).isEqualTo(1);
-        assertUserDetailsDto(collectionDetailsDto.details().get(0), "frank.long@gmail.com", "070123456789", true);
+        assertUserSummaryDto(collectionDetailsDto.details().get(0));
         assertThat(collectionDetailsDto.currentPage()).isEqualTo(0);
         assertThat(collectionDetailsDto.totalPages()).isEqualTo(1);
         assertThat(collectionDetailsDto.totalElements()).isEqualTo(1L);
@@ -143,6 +143,15 @@ class UserServiceTest {
         assertThat(userDetailsDto.profileImage()).isEqualTo("/some/path/");
         assertThat(userDetailsDto.visible()).isEqualTo(expectedVisibility);
         assertThat(userDetailsDto.status()).isEqualTo("some status value");
+    }
+
+    private void assertUserSummaryDto(UserSummaryDto userSummaryDto) {
+        assertThat(userSummaryDto).isNotNull();
+        assertThat(userSummaryDto.id()).isEqualTo(UUID.fromString("c8da08f0-00d8-4730-87e9-19544a0cd72a"));
+        assertThat(userSummaryDto.username()).isEqualTo("longFrank");
+        assertThat(userSummaryDto.profileImage()).isEqualTo("/some/path/");
+        assertThat(userSummaryDto.firstName()).isEqualTo("Frank");
+        assertThat(userSummaryDto.lastName()).isEqualTo("Long");
     }
 
     private User buildUserForTest(String email, String phoneNumber, boolean visibility) {

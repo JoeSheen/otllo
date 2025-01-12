@@ -29,10 +29,9 @@ public class UserController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public CollectionDetailsDto<UserDetailsDto> getAllUsers(
+    public CollectionDetailsDto<UserSummaryDto> getAllUsers(
             @RequestParam(defaultValue = "") String searchValue,
             @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam(defaultValue = "150") Integer pageSize) {
-        // TODO: replace UserDetailsDto with UserSummaryDto once that has been merged into master
         return userService.getAllUsers(searchValue.toUpperCase(), pageNumber, pageSize);
     }
 

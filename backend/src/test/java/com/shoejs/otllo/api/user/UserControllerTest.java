@@ -51,16 +51,16 @@ class UserControllerTest {
     @Test
     void testGetAllUsers() throws Exception {
         when(userService.getAllUsers(any(String.class), any(Integer.class), any(Integer.class)))
-                .thenReturn(new CollectionDetailsDto<>(List.of(buildUserDetailsForTest(true)), 0, 1, 1L));
+                .thenReturn(new CollectionDetailsDto<>(List.of(buildUserSummaryForTest()), 0, 1, 1L));
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(baseRequest)
                 .content(APPLICATION_JSON_VALUE);
 
         MvcResult result = mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isOk()).andReturn();
-        CollectionDetailsDto<UserDetailsDto> collectionDetailsDto = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+        CollectionDetailsDto<UserSummaryDto> collectionDetailsDto = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
         assertThat(collectionDetailsDto).isNotNull();
         assertThat(collectionDetailsDto.details().size()).isEqualTo(1);
-        assertUserDetailsDto(collectionDetailsDto.details().get(0), true);
+        assertUserSummary(collectionDetailsDto.details().get(0));
         assertThat(collectionDetailsDto.currentPage()).isEqualTo(0);
         assertThat(collectionDetailsDto.totalPages()).isEqualTo(1);
         assertThat(collectionDetailsDto.totalElements()).isEqualTo(1L);
@@ -162,11 +162,24 @@ class UserControllerTest {
         assertThat(userDetailsDto.status()).isEqualTo("some status value");
     }
 
+    private void assertUserSummary(UserSummaryDto userSummaryDto) {
+        assertThat(userSummaryDto).isNotNull();
+        assertThat(userSummaryDto.id()).isEqualTo(UUID.fromString("fec26fd5-3575-4865-bb3b-b078ca2a82e5"));
+        assertThat(userSummaryDto.username()).isEqualTo("ProSimmons");
+        assertThat(userSummaryDto.profileImage()).isEqualTo("/some/path/");
+        assertThat(userSummaryDto.firstName()).isEqualTo("Charles");
+        assertThat(userSummaryDto.lastName()).isEqualTo("Simmons");
+    }
+
     private UserDetailsDto buildUserDetailsForTest(boolean visibility) {
         LocalDate dateOfBirth = LocalDate.of(1984, Month.APRIL, 10);
 
         return new UserDetailsDto(id, "Charles", "Simmons", dateOfBirth, "MALE",
                 "charles.simmons@protonmail.com", "070123456789", "ProSimmons",
                 "/some/path/", visibility, "some status value");
+    }
+
+    private UserSummaryDto buildUserSummaryForTest() {
+        return new UserSummaryDto(id, "ProSimmons", "/some/path/", "Charles", "Simmons");
     }
 }
